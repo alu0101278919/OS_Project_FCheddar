@@ -1,0 +1,371 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "FCheddar"
+		}
+	],
+	"backtrace" : 4,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"_qt_internal_create_executable",
+			"qt6_add_executable",
+			"qt_add_executable",
+			"target_link_libraries"
+		],
+		"files" : 
+		[
+			"/home/alu0101206011/Qt/6.2.4/gcc_64/lib/cmake/Qt6Core/Qt6CoreMacros.cmake",
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 30,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 933,
+				"parent" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 523,
+				"parent" : 2
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 559,
+				"parent" : 3
+			},
+			{
+				"command" : 4,
+				"file" : 1,
+				"line" : 53,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 1,
+				"line" : 52,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 524,
+				"parent" : 2
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "-fPIC"
+				},
+				{
+					"fragment" : "-std=gnu++17"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 5,
+					"define" : "QT_CHARTS_LIB"
+				},
+				{
+					"backtrace" : 7,
+					"define" : "QT_CORE_LIB"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "QT_GUI_LIB"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "QT_OPENGLWIDGETS_LIB"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "QT_OPENGL_LIB"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "QT_WIDGETS_LIB"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"path" : "/home/alu0101206011/Escritorio/hola/2022-proyecto-qt-grupo_jaime_anabel/build-FCheddar-Desktop_Qt_6_2_4_GCC_64bit-Debug"
+				},
+				{
+					"path" : "/home/alu0101206011/Escritorio/hola/2022-proyecto-qt-grupo_jaime_anabel/FCheddar"
+				},
+				{
+					"backtrace" : 0,
+					"path" : "/home/alu0101206011/Escritorio/hola/2022-proyecto-qt-grupo_jaime_anabel/build-FCheddar-Desktop_Qt_6_2_4_GCC_64bit-Debug/FCheddar_autogen/include"
+				},
+				{
+					"backtrace" : 7,
+					"isSystem" : true,
+					"path" : "/home/alu0101206011/Qt/6.2.4/gcc_64/include/QtCore"
+				},
+				{
+					"backtrace" : 7,
+					"isSystem" : true,
+					"path" : "/home/alu0101206011/Qt/6.2.4/gcc_64/include"
+				},
+				{
+					"backtrace" : 7,
+					"isSystem" : true,
+					"path" : "/home/alu0101206011/Qt/6.2.4/gcc_64/mkspecs/linux-g++"
+				},
+				{
+					"backtrace" : 6,
+					"isSystem" : true,
+					"path" : "/home/alu0101206011/Qt/6.2.4/gcc_64/include/QtWidgets"
+				},
+				{
+					"backtrace" : 6,
+					"isSystem" : true,
+					"path" : "/home/alu0101206011/Qt/6.2.4/gcc_64/include/QtGui"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/home/alu0101206011/Qt/6.2.4/gcc_64/include/QtCharts"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/home/alu0101206011/Qt/6.2.4/gcc_64/include/QtOpenGL"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/home/alu0101206011/Qt/6.2.4/gcc_64/include/QtOpenGLWidgets"
+				}
+			],
+			"language" : "CXX",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				7,
+				10
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 0,
+			"id" : "FCheddar_autogen::@6890427a1f51a3e7e1df"
+		},
+		{
+			"id" : "FCheddar_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
+		}
+	],
+	"id" : "FCheddar::@6890427a1f51a3e7e1df",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-g",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "-Wl,-rpath,/home/alu0101206011/Qt/6.2.4/gcc_64/lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "/home/alu0101206011/Qt/6.2.4/gcc_64/lib/libQt6Charts.so.6.2.4",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/home/alu0101206011/Qt/6.2.4/gcc_64/lib/libQt6OpenGLWidgets.so.6.2.4",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "/home/alu0101206011/Qt/6.2.4/gcc_64/lib/libQt6Widgets.so.6.2.4",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/home/alu0101206011/Qt/6.2.4/gcc_64/lib/libQt6OpenGL.so.6.2.4",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/home/alu0101206011/Qt/6.2.4/gcc_64/lib/libQt6Gui.so.6.2.4",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 7,
+				"fragment" : "/home/alu0101206011/Qt/6.2.4/gcc_64/lib/libQt6Core.so.6.2.4",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/usr/lib/x86_64-linux-gnu/libGLX.so",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/usr/lib/x86_64-linux-gnu/libOpenGL.so",
+				"role" : "libraries"
+			}
+		],
+		"language" : "CXX"
+	},
+	"name" : "FCheddar",
+	"nameOnDisk" : "FCheddar",
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				7,
+				10
+			]
+		},
+		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				3,
+				6
+			]
+		},
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				4,
+				5,
+				8,
+				9
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				11,
+				12
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 0,
+			"compileGroupIndex" : 0,
+			"isGenerated" : true,
+			"path" : "/home/alu0101206011/Escritorio/hola/2022-proyecto-qt-grupo_jaime_anabel/build-FCheddar-Desktop_Qt_6_2_4_GCC_64bit-Debug/FCheddar_autogen/mocs_compilation.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "main.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "mainwindow.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"path" : "mainwindow.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 4,
+			"path" : "mainwindow.ui",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 4,
+			"path" : "icons.qrc",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 4,
+			"path" : "scheduler.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "scheduler.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"path" : "scheduler.ui",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "/home/alu0101206011/Escritorio/hola/2022-proyecto-qt-grupo_jaime_anabel/build-FCheddar-Desktop_Qt_6_2_4_GCC_64bit-Debug/FCheddar_autogen/timestamp",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 0,
+			"compileGroupIndex" : 0,
+			"isGenerated" : true,
+			"path" : "/home/alu0101206011/Escritorio/hola/2022-proyecto-qt-grupo_jaime_anabel/build-FCheddar-Desktop_Qt_6_2_4_GCC_64bit-Debug/FCheddar_autogen/EWIEGA46WW/qrc_icons.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "/home/alu0101206011/Escritorio/hola/2022-proyecto-qt-grupo_jaime_anabel/build-FCheddar-Desktop_Qt_6_2_4_GCC_64bit-Debug/FCheddar_autogen/timestamp.rule",
+			"sourceGroupIndex" : 3
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "/home/alu0101206011/Escritorio/hola/2022-proyecto-qt-grupo_jaime_anabel/build-FCheddar-Desktop_Qt_6_2_4_GCC_64bit-Debug/FCheddar_autogen/EWIEGA46WW/qrc_icons.cpp.rule",
+			"sourceGroupIndex" : 3
+		}
+	],
+	"type" : "EXECUTABLE"
+}

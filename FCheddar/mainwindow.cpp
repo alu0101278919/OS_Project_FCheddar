@@ -1,11 +1,15 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "./scheduler.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , schedule(new Scheduler)
 {
     ui->setupUi(this);
+    setWindowTitle("FCheddar");
+
     QLineSeries *series = new QLineSeries();
     QLineSeries *seriesTask = new QLineSeries();
     *series << QPointF(0, 0.75) << QPointF(120, 0.75);
@@ -103,5 +107,15 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete schedule;
+}
+
+
+// Open scheduler settings
+void MainWindow::on_actionScheduler_Settings_triggered()
+{
+    schedule->setModal(true);
+    schedule->setWindowTitle("Scheduler settings");
+    schedule->exec();
 }
 

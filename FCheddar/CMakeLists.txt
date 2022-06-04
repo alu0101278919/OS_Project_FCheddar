@@ -21,6 +21,12 @@ set(PROJECT_SOURCES
         mainwindow.h
         mainwindow.ui
         icons.qrc
+        scheduler.h
+        scheduler.cpp
+        scheduler.ui
+        task.h
+        task.cpp
+        task.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

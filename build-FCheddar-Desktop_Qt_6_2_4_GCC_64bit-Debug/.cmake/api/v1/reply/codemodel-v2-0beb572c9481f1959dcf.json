@@ -1,0 +1,77 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "FCheddar",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "FCheddar::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-FCheddar-Debug-8c3476b6f7ed16f61088.json",
+					"name" : "FCheddar",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "FCheddar_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-FCheddar_autogen-Debug-add1e85502b044da39d5.json",
+					"name" : "FCheddar_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "FCheddar_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-FCheddar_autogen_timestamp_deps-Debug-bf1f96db478bda124ec9.json",
+					"name" : "FCheddar_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/alu0101206011/Escritorio/hola/2022-proyecto-qt-grupo_jaime_anabel/build-FCheddar-Desktop_Qt_6_2_4_GCC_64bit-Debug",
+		"source" : "/home/alu0101206011/Escritorio/hola/2022-proyecto-qt-grupo_jaime_anabel/FCheddar"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 1
+	}
+}

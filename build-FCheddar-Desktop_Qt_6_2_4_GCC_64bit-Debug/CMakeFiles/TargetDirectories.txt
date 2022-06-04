@@ -1,0 +1,5 @@
+/home/alu0101206011/Escritorio/hola/2022-proyecto-qt-grupo_jaime_anabel/build-FCheddar-Desktop_Qt_6_2_4_GCC_64bit-Debug/CMakeFiles/rebuild_cache.dir
+/home/alu0101206011/Escritorio/hola/2022-proyecto-qt-grupo_jaime_anabel/build-FCheddar-Desktop_Qt_6_2_4_GCC_64bit-Debug/CMakeFiles/edit_cache.dir
+/home/alu0101206011/Escritorio/hola/2022-proyecto-qt-grupo_jaime_anabel/build-FCheddar-Desktop_Qt_6_2_4_GCC_64bit-Debug/CMakeFiles/FCheddar.dir
+/home/alu0101206011/Escritorio/hola/2022-proyecto-qt-grupo_jaime_anabel/build-FCheddar-Desktop_Qt_6_2_4_GCC_64bit-Debug/CMakeFiles/FCheddar_autogen_timestamp_deps.dir
+/home/alu0101206011/Escritorio/hola/2022-proyecto-qt-grupo_jaime_anabel/build-FCheddar-Desktop_Qt_6_2_4_GCC_64bit-Debug/CMakeFiles/FCheddar_autogen.dir
