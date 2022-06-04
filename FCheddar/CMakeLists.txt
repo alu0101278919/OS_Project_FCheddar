@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(SOA_FCheddar VERSION 0.1 LANGUAGES CXX)
+project(FCheddar VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -13,42 +13,43 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Charts)
+find_package(Qt6 REQUIRED COMPONENTS Charts)
 
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        icons.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(SOA_FCheddar
+    qt_add_executable(FCheddar
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
 # Define target properties for Android with Qt 6 as:
-#    set_property(TARGET SOA_FCheddar APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
+#    set_property(TARGET FCheddar APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
 # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 else()
     if(ANDROID)
-        add_library(SOA_FCheddar SHARED
+        add_library(FCheddar SHARED
             ${PROJECT_SOURCES}
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else()
-        add_executable(SOA_FCheddar
+        add_executable(FCheddar
             ${PROJECT_SOURCES}
         )
     endif()
 endif()
 
-target_link_libraries(SOA_FCheddar PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-target_link_libraries(SOA_FCheddar PRIVATE Qt6::Charts)
+target_link_libraries(FCheddar PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(FCheddar PRIVATE Qt6::Charts)
 
-set_target_properties(SOA_FCheddar PROPERTIES
+set_target_properties(FCheddar PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
@@ -57,5 +58,5 @@ set_target_properties(SOA_FCheddar PROPERTIES
 )
 
 if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(SOA_FCheddar)
+    qt_finalize_executable(FCheddar)
 endif()

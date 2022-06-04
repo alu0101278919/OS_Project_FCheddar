@@ -73,7 +73,7 @@ color: rgb(0, 0, 0);</string>
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -124,8 +124,8 @@ color: rgb(0, 0, 0);</string>
   </widget>
   <action name="actionNew_Schedule">
    <property name="icon">
-    <iconset>
-     <normaloff>../Images/icons8-add-file-80.png</normaloff>../Images/icons8-add-file-80.png</iconset>
+    <iconset resource="icons.qrc">
+     <normaloff>:/img/icons8-add-file-80.png</normaloff>:/img/icons8-add-file-80.png</iconset>
    </property>
    <property name="text">
     <string>New Schedule</string>
@@ -133,8 +133,8 @@ color: rgb(0, 0, 0);</string>
   </action>
   <action name="actionOpen_Schedule">
    <property name="icon">
-    <iconset>
-     <normaloff>../Images/icons8-file-480.png</normaloff>../Images/icons8-file-480.png</iconset>
+    <iconset resource="icons.qrc">
+     <normaloff>:/img/icons8-folder-480.png</normaloff>:/img/icons8-folder-480.png</iconset>
    </property>
    <property name="text">
     <string>Open Schedule</string>
@@ -142,8 +142,8 @@ color: rgb(0, 0, 0);</string>
   </action>
   <action name="actionSave">
    <property name="icon">
-    <iconset>
-     <normaloff>../Images/icons8-save-80.png</normaloff>../Images/icons8-save-80.png</iconset>
+    <iconset resource="icons.qrc">
+     <normaloff>:/img/icons8-save-80.png</normaloff>:/img/icons8-save-80.png</iconset>
    </property>
    <property name="text">
     <string>Save</string>
@@ -151,8 +151,8 @@ color: rgb(0, 0, 0);</string>
   </action>
   <action name="actionSave_as">
    <property name="icon">
-    <iconset>
-     <normaloff>../Images/icons8-save-as-80.png</normaloff>../Images/icons8-save-as-80.png</iconset>
+    <iconset resource="icons.qrc">
+     <normaloff>:/img/icons8-save-as-80.png</normaloff>:/img/icons8-save-as-80.png</iconset>
    </property>
    <property name="text">
     <string>Save as</string>
@@ -160,8 +160,8 @@ color: rgb(0, 0, 0);</string>
   </action>
   <action name="actionClose_Schedule">
    <property name="icon">
-    <iconset>
-     <normaloff>../Images/icons8-close-480.png</normaloff>../Images/icons8-close-480.png</iconset>
+    <iconset resource="icons.qrc">
+     <normaloff>:/img/icons8-close-480.png</normaloff>:/img/icons8-close-480.png</iconset>
    </property>
    <property name="text">
     <string>Close Schedule</string>
@@ -169,8 +169,8 @@ color: rgb(0, 0, 0);</string>
   </action>
   <action name="actionRestart_Scheduler">
    <property name="icon">
-    <iconset>
-     <normaloff>../Images/icons8-restart-480.png</normaloff>../Images/icons8-restart-480.png</iconset>
+    <iconset resource="icons.qrc">
+     <normaloff>:/img/icons8-restart-480.png</normaloff>:/img/icons8-restart-480.png</iconset>
    </property>
    <property name="text">
     <string>Restart Scheduler</string>
@@ -178,8 +178,8 @@ color: rgb(0, 0, 0);</string>
   </action>
   <action name="actionScheduler_Settings">
    <property name="icon">
-    <iconset>
-     <normaloff>../Images/icons8-services-480.png</normaloff>../Images/icons8-services-480.png</iconset>
+    <iconset resource="icons.qrc">
+     <normaloff>:/img/icons8-services-480.png</normaloff>:/img/icons8-services-480.png</iconset>
    </property>
    <property name="text">
     <string>Scheduler Settings</string>
@@ -187,14 +187,16 @@ color: rgb(0, 0, 0);</string>
   </action>
   <action name="actionRun_Scheduler">
    <property name="icon">
-    <iconset>
-     <normaloff>../Images/icons8-next-80.png</normaloff>../Images/icons8-next-80.png</iconset>
+    <iconset resource="icons.qrc">
+     <normaloff>:/img/icons8-next-80.png</normaloff>:/img/icons8-next-80.png</iconset>
    </property>
    <property name="text">
     <string>Run Scheduler</string>
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
  <connections/>
 </ui>
