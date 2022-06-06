@@ -27,6 +27,8 @@ set(PROJECT_SOURCES
         task.h
         task.cpp
         task.ui
+        graph.h
+        graph.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

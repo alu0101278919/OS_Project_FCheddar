@@ -5,6 +5,7 @@
 #include <QtCharts>
 
 #include "./scheduler.h"
+#include "./graph.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -23,6 +24,10 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    Scheduler* schedule;
+    Scheduler *schedule;
+    Graph *graph;
+    QChartView *chartView;
+    QVBoxLayout *layout;
+    bool graph_exists;
 };
 #endif // MAINWINDOW_H
