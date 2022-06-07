@@ -32,7 +32,6 @@ QVector<taskInfo>* Scheduler::get_taskTable(void) const {
 }
 
 
-
 void Scheduler::on_addButton_clicked()
 {
     Task task(this);
@@ -58,6 +57,25 @@ void Scheduler::on_addButton_clicked()
     ui->tableWidget->setItem(row, PERIOD, new QTableWidgetItem(QString::number(task.period())));
 
     ui->tableWidget->sortItems(PERIOD, Qt::AscendingOrder);
+}
+
+
+void Scheduler::on_deleteButton_clicked()
+{
+    if (!ui->tableWidget->rowCount()) {
+        QMessageBox::critical(this, "Error", "No tasks in the table.");
+        return;
+    }
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Warning",
+                                 "Are you sure that you want to delete the selected task?",
+                                 QMessageBox::Ok | QMessageBox::Cancel);
+    if (reply == QMessageBox::Cancel) {
+        return;
+    }
+    std::cout << ui->tableWidget->rowCount() << std::endl << std::flush;
+
+    ui->tableWidget->removeRow(ui->tableWidget->currentRow());
 }
 
 

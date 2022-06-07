@@ -9,6 +9,7 @@
 
 #include "./scheduler.h"
 #include "./database.h"
+#include "./calendar.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -30,14 +31,10 @@ private slots:
     void on_connectToDatabase_clicked();
     void on_actionSave_triggered();
     void on_deleteButton_clicked();
-
     void on_projectTable_clicked(const QModelIndex &index);
-
     void on_filterButton_clicked();
-
     void on_cleanButton_clicked();
-
-    void on_calendarButton_triggered(QAction *arg1);
+    void on_calendarButton_clicked();
 
 private:
     enum typeAction {OPEN, NEW};
@@ -50,6 +47,7 @@ private:
     Database* database;
     QSqlTableModel *mModel;
     const QModelIndex *lastIndex;
+    Calendar* calendar;
 
 };
 #endif // MAINWINDOW_H

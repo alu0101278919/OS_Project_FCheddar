@@ -2,6 +2,7 @@
 #include "./ui_mainwindow.h"
 #include "./scheduler.h"
 #include "./database.h"
+#include "./calendar.h"
 
 #include <QCalendarWidget>
 #include <QDate>
@@ -13,9 +14,9 @@ MainWindow::MainWindow(QWidget *parent)
     , database(new Database(this))
     , mModel(nullptr)
     , lastIndex(nullptr)
+    , calendar(new Calendar)
 
 {
-
     ui->setupUi(this);
     setWindowTitle("FCheddar");
     ui->imgGraph->setText("<b>No image</b>");
@@ -23,7 +24,6 @@ MainWindow::MainWindow(QWidget *parent)
     //ui->projectTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch); // para que las columnas completen el View
     ui->projectTable->horizontalHeader()->setStretchLastSection(true);
     ui->imgGraph->setScaledContents(true);
-
 }
 
 
@@ -140,6 +140,10 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::on_deleteButton_clicked()
 {
+    if (!database->databaseIsOpen()) {
+        QMessageBox::critical(this, "Error", database->getError());
+        return;
+    }
     if (!mModel){
         return;
     }
@@ -189,6 +193,11 @@ void MainWindow::insertarImagen(const QModelIndex &index)
 
 void MainWindow::on_filterButton_clicked()
 {
+    if (!database->databaseIsOpen()) {
+        QMessageBox::critical(this, "Error", database->getError());
+        return;
+    }
+
     QString filter;
     bool previous = false;
     if (!ui->projectNameEdit->text().isEmpty()) {
@@ -234,10 +243,19 @@ void MainWindow::on_cleanButton_clicked()
 }
 
 
-void MainWindow::on_calendarButton_triggered(QAction *arg1)
+void MainWindow::on_calendarButton_clicked()
 {
-    QCalendarWidget *calendar;
-    //calendar->activated(QDate::currentDate());
-    calendar->calendar();
+    if (!database->databaseIsOpen()) {
+        QMessageBox::critical(this, "Error", database->getError());
+        return;
+    }
+    calendar->setModal(true);
+    calendar->setWindowTitle("Calendar settings");
+
+    if (calendar->exec() == QDialog::Rejected) {
+        return;
+    }
+    ui->calendarEdit->clear();
+    ui->calendarEdit->setText(calendar->get_selectedDate());
 }
 

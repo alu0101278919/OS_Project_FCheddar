@@ -30,6 +30,7 @@ private slots:
     void on_addButton_clicked();
     void on_AcceptRejectButtons_accepted();
     void on_AcceptRejectButtons_rejected();
+    void on_deleteButton_clicked();
 
 private:
     Ui::Scheduler *ui;
