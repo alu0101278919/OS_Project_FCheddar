@@ -1,6 +1,8 @@
 #include "task.h"
 #include "ui_task.h"
 
+#include <QMessageBox>
+
 Task::Task(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Task)
@@ -16,6 +18,13 @@ Task::~Task()
 // Accept the task
 void Task::on_buttonBox_accepted()
 {
+    if (ui->taskName->text().isEmpty()) {
+        QMessageBox::warning(this, "Warning", "Task name cannot be empty.");
+        return;
+    } else if (ui->execTime->value() > ui->period->value()) {
+        QMessageBox::warning(this, "Warning", "Time execution must be greater than period.");
+        return;
+    }
     accept();
 }
 

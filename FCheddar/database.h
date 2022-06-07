@@ -8,41 +8,33 @@
 #include <QDateTime>
 #include <QVariant>
 
+#include "scheduler.h"
+
 #define CREATE_TABLE_FCheddar \
     "CREATE TABLE IF NOT EXISTS FCheddar"\
     "(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL"\
     ", projectName TEXT UNIQUE NOT NULL"\
-    ", task_num INTEGER NOT NULL"\
-    ", hyperperiod INTEGER NOT NULL"\
-    ", scheduleable TEXT NOT NULL CHECK (scheduleable IN (\'Yes\', \'No\'))"\
-    ", personImage BLOB NOT NULL)"
+    ", taskNumber INTEGER NOT NULL"\
+    ", hyperperiod INTEGER"\
+    ", scheduleable TEXT CHECK (scheduleable IN (\'Yes\', \'No\'))"\
+    ", timestamp TEXT DEFAULT(date('now','localtime'))"\
+    ", graphImage BLOB)"
 
+
+//
 class Database : public QObject {
   Q_OBJECT
 public:
-
-    struct FCheddarTable {
-        QString nameTable;
-
-        QString nameProject;
-        int taskNumber;
-        int hyperperiod;
-        bool scheduleable;
-        QByteArray graphImage;
-    };
-
     explicit Database(QObject *parent);
     bool startDatabase(const QString &nameFile);
     bool configureDatabase();
-
-    bool openDatabase(QObject *parent);
-    bool insertProject(const int &);
+    bool databaseIsOpen();
+    bool insertProject(const Scheduler&, const QByteArray&);
 
     QString getError();
 
 private:
     QSqlDatabase mDatabase;
-    FCheddarTable* projectTable;
     QString mError;
 
 };

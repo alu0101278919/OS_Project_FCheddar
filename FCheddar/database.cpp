@@ -1,4 +1,5 @@
 #include "database.h"
+#include "scheduler.h"
 
 #include <iostream>
 
@@ -16,40 +17,49 @@ bool Database::startDatabase(const QString &nameFile) {
 bool Database::configureDatabase() {
     // La query que crea la base de datos si no está creada
     QSqlQuery query;
-    std::cout << "Paso por aqui\n" << std::flush;
     bool ok = query.exec(CREATE_TABLE_FCheddar);
-
     if (!ok)
         mError = query.lastError().text();
     return ok;
+}
+
+bool Database::databaseIsOpen() {
+    if (!mDatabase.isOpen()) {
+        mError = QString("Database is not open");
+        return false;
+    }
+    return true;
 }
 
 QString Database::getError() {
     return mError;
 }
 
-// int es provisional
-bool Database::insertProject(const int& Project) {
+#include <QFileDialog>
+#include <QMessageBox>
+
+// meter grafica entera
+bool Database::insertProject(const Scheduler& Project, const QByteArray& graphImage) {
+    QFile file("/home/alu0101206011/Escritorio/drive-download-20220606T122718Z-001/pepe.jpg");
+    if(!file.open(QIODevice::ReadOnly)){
+        std::cout << "Error coñe\n" << std::flush;
+        return false;
+    }
+    QByteArray byteArray = file.readAll();
+
+
+
+
+
     QSqlQuery query;
-    QString q_str = QString("INSERT INTO %1 (%2, %3, %4, %5, %6) "
-                            "VALUES (:name, :task, :hyperperiod, :scheduleable, :graph)")
-                    .arg(projectTable->nameTable)
-                    .arg(projectTable->nameProject)
-                    .arg(projectTable->taskNumber)
-                    .arg(projectTable->hyperperiod)
-                    .arg(projectTable->scheduleable)
-                    .arg(projectTable->graphImage);
-
-    QByteArray graph_content;
-
-    query.prepare(q_str);
-    query.bindValue(":name", "Proyecto1");
-    query.bindValue(":task", 3);
+    QString hola = "Yes";
+    query.prepare("INSERT INTO FCheddar (projectName, taskNumber, hyperperiod, scheduleable, graphImage) "
+                  "VALUES (:name, :task, :hyperperiod, :scheduleable, :graph)");
+    query.bindValue(":name", Project.get_projectName());
+    query.bindValue(":task", Project.get_taskTable()->size());
     query.bindValue(":hyperperiod", 120);
-    query.bindValue(":scheduleable", "Yes");
-    query.bindValue(":graph", graph_content);
-    QDateTime date = QDateTime::currentDateTime();
-    QString date_str = date.toString("dd.MM.yyyy hh:mm:ss");
+    query.bindValue(":scheduleable", hola);
+    query.bindValue(":graph", byteArray);
     bool ok = query.exec();
     if (!ok)
         mError = query.lastError().text();

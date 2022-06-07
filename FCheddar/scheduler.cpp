@@ -2,6 +2,8 @@
 #include "ui_scheduler.h"
 #include "task.h"
 
+#include <QMessageBox>
+
 
 Scheduler::Scheduler(QWidget *parent) :
     QDialog(parent),
@@ -9,10 +11,11 @@ Scheduler::Scheduler(QWidget *parent) :
     taskTable(new QVector<taskInfo>)
 {
     QStringList titles;
+    titles << "Task name" << "Arrival Time" << "Execution time" << "Period";
     ui->setupUi(this);
     ui->tableWidget->setColumnCount(4);
-    titles << "Task name" << "Arrival Time" << "Execution time" << "Period";
     ui->tableWidget->setHorizontalHeaderLabels(titles);
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch); // para que las columnas completen el widget
 }
 
 Scheduler::~Scheduler()
@@ -20,22 +23,25 @@ Scheduler::~Scheduler()
     delete ui;
 }
 
+QString Scheduler::get_projectName(void) const {
+    return projectName;
+}
 
 QVector<taskInfo>* Scheduler::get_taskTable(void) const {
     return taskTable;
 }
 
-// Add task
-void Scheduler::on_Add_button_clicked()
+
+
+void Scheduler::on_addButton_clicked()
 {
     Task task(this);
     task.setWindowTitle("Task adder");
-    if (task.exec() == QDialog::Rejected)
-        return;
-    else if (task.period() < task.execTime()) { // NECESITAMOS PONER UN ERROR AQUÍ
+    int result = task.exec();
+
+    if (result == QDialog::Rejected) {
         return;
     }
-
     taskInfo current_task;
     current_task.name = task.taskName();
     current_task.arrivalT = task.arrivalTime();
@@ -52,5 +58,22 @@ void Scheduler::on_Add_button_clicked()
     ui->tableWidget->setItem(row, PERIOD, new QTableWidgetItem(QString::number(task.period())));
 
     ui->tableWidget->sortItems(PERIOD, Qt::AscendingOrder);
+}
+
+
+void Scheduler::on_AcceptRejectButtons_accepted()
+{
+    if (ui->projectName->text().isEmpty()) {
+        QMessageBox::warning(this, "Warning", "Project name cannot be empty.");
+        return;
+    }
+    projectName = ui->projectName->text();
+    accept();
+}
+
+
+void Scheduler::on_AcceptRejectButtons_rejected()
+{
+    reject();
 }
 

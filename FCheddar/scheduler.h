@@ -24,13 +24,17 @@ public:
     ~Scheduler();
 
     QVector<taskInfo>* get_taskTable(void) const;
+    QString get_projectName(void) const;
 
 private slots:
-    void on_Add_button_clicked();
+    void on_addButton_clicked();
+    void on_AcceptRejectButtons_accepted();
+    void on_AcceptRejectButtons_rejected();
 
 private:
     Ui::Scheduler *ui;
     QVector<taskInfo>* taskTable;
+    QString projectName;
     enum Column
     {
         TASK_NAME, ARRIVAL_T, EXEC_T, PERIOD

@@ -30,6 +30,9 @@ set(PROJECT_SOURCES
         task.ui
         database.h
         database.cpp
+        calendar.h
+        calendar.cpp
+        calendar.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
