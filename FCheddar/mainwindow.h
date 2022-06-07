@@ -22,6 +22,8 @@ public:
 private slots:
     void on_actionScheduler_Settings_triggered();
 
+    void on_actionRun_Scheduler_triggered();
+
 private:
     Ui::MainWindow *ui;
     Scheduler *schedule;

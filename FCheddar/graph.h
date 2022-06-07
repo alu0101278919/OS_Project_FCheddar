@@ -14,12 +14,19 @@ public:
 
     QChart* get_chart(void);
 
+    bool rms(void);
+
 private:
     int task_num_;
     bool schedulable_;
     QVector<QLineSeries*> taskLines_;
-    QVector<QLineSeries*> activeTaskLines_;
+    QVector<QVector<QLineSeries*> > activeTaskLines_;
     int hyperperiod_;
+    QVector<QString> name_vect_;
+    QVector<int> arrivalT_vect_;
+    QVector<int> period_vect_;
+    QVector<int> execT_vect_;
+    QVector<QVector<int> > arrival_period_vect;
 
     //Graph Attributes
     QChart *chart;
