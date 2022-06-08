@@ -13,6 +13,8 @@ public:
     void setActiveTaskPen(QColor, int);
 
     QChart* get_chart(void);
+    QByteArray get_chart_img(void);
+    int get_hyperperiod(void);
 
     bool rms(void);
 

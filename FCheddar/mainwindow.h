@@ -24,6 +24,8 @@ private slots:
 
     void on_actionRun_Scheduler_triggered();
 
+    void on_actionRestart_Scheduler_triggered();
+
 private:
     Ui::MainWindow *ui;
     Scheduler *schedule;

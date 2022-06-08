@@ -18,12 +18,9 @@ Graph::Graph(int task_num, int hyperperiod,
     arrival_period_vect.resize(task_num_);
 
     for(int i = 0; i < task_num_; i++) {
-        std::cout << "task " << i << ": ";
         for(int j = arrivalT_vect_[i]; j <= hyperperiod_; j += period_vect_[i]) {
             arrival_period_vect[i].push_back(j);
-            std::cout << "[" << j << "] ";
         }
-        std::cout << std::endl;
     }
 
     // Initialize QPens
@@ -47,7 +44,7 @@ Graph::Graph(int task_num, int hyperperiod,
 
     // Customize axis label font
     QFont labelsFont;
-    labelsFont.setPixelSize(12);
+    labelsFont.setPixelSize(10);
     axisX->setLabelsFont(labelsFont);
     axisY->setLabelsFont(labelsFont);
 
@@ -92,26 +89,6 @@ Graph::Graph(int task_num, int hyperperiod,
         taskLines_[i]->attachAxis(axisY);
     }
     activeTaskLines_.resize(task_num_);
-
-
-/*
-    QLineSeries *series = new QLineSeries();
-    QLineSeries *seriesTask = new QLineSeries();
-    *series << QPointF(0, 0.75) << QPointF(120, 0.75);
-    *seriesTask << QPointF(1, 0.75) << QPointF(5, 0.75);
-
-    series->setPen(taskPen);
-    seriesTask->setPen(activeTaskPen);
-
-    chart->addSeries(series);
-    chart->addSeries(seriesTask);
-
-    series->attachAxis(axisX);
-    series->attachAxis(axisY);
-
-    seriesTask->attachAxis(axisX);
-    seriesTask->attachAxis(axisY);
-*/
 }
 
 Graph::~Graph()
@@ -126,6 +103,19 @@ Graph::~Graph()
 
 QChart* Graph::get_chart(void) {
     return chart;
+}
+
+QByteArray Graph::get_chart_img(void) {
+   QChartView *chartView = new QChartView(chart);
+   QPixmap p = chartView->grab();
+   QByteArray bArray;
+   QBuffer buffer(&bArray);
+   buffer.open(QIODevice::WriteOnly); p.save(&buffer, "PNG");
+   return bArray;
+}
+
+int Graph::get_hyperperiod(void) {
+    return hyperperiod_;
 }
 
 void Graph::setTaskPen(QColor color, int width) {
