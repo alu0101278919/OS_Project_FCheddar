@@ -1,9 +1,29 @@
 #include "scheduler.h"
 #include "ui_scheduler.h"
 #include "task.h"
+#include <algorithm>
+#include <numeric>
 
 #include <QMessageBox>
 
+
+int gcd(int a, int b)
+{
+    while(true)
+    {
+        if (a == 0) return b;
+        b %= a;
+        if (b == 0) return a;
+        a %= b;
+    }
+}
+
+int lcm(int a, int b)
+{
+    int temp = gcd(a, b);
+
+    return temp ? (a / temp * b) : 0;
+}
 
 Scheduler::Scheduler(QWidget *parent) :
     QDialog(parent),
@@ -21,6 +41,7 @@ Scheduler::Scheduler(QWidget *parent) :
 Scheduler::~Scheduler()
 {
     delete ui;
+    delete taskTable;
 }
 
 QString Scheduler::get_projectName(void) const {
@@ -31,7 +52,43 @@ QVector<taskInfo>* Scheduler::get_taskTable(void) const {
     return taskTable;
 }
 
+QVector<QString> Scheduler::get_taskNames(void) const {
+    QVector<QString> vect;
+    for(int i = 0; i < taskTable->size(); i++) {
+        vect.push_back((*taskTable)[i].name);
+    }
+    return vect;
+}
 
+QVector<int> Scheduler::get_taskAT(void) const {
+    QVector<int> vect;
+    for(int i = 0; i < taskTable->size(); i++) {
+        vect.push_back((*taskTable)[i].arrivalT);
+    }
+    return vect;
+}
+
+QVector<int> Scheduler::get_taskPeriods(void) const {
+    QVector<int> vect;
+    for(int i = 0; i < taskTable->size(); i++) {
+        vect.push_back((*taskTable)[i].period);
+    }
+    return vect;
+}
+
+QVector<int> Scheduler::get_taskExecT(void) const {
+    QVector<int> vect;
+    for(int i = 0; i < taskTable->size(); i++) {
+        vect.push_back((*taskTable)[i].execT);
+    }
+    return vect;
+}
+
+int Scheduler::calculate_hyperperiod(QVector<int> vect) {
+    return std::accumulate(vect.begin(), vect.end(), 1, lcm);
+}
+
+// Add task
 void Scheduler::on_addButton_clicked()
 {
     Task task(this);
@@ -57,6 +114,7 @@ void Scheduler::on_addButton_clicked()
     ui->tableWidget->setItem(row, PERIOD, new QTableWidgetItem(QString::number(task.period())));
 
     ui->tableWidget->sortItems(PERIOD, Qt::AscendingOrder);
+    std::sort(taskTable->begin(), taskTable->end());
 }
 
 
@@ -76,6 +134,7 @@ void Scheduler::on_deleteButton_clicked()
     std::cout << ui->tableWidget->rowCount() << std::endl << std::flush;
 
     ui->tableWidget->removeRow(ui->tableWidget->currentRow());
+    taskTable->erase(taskTable->constBegin() + ui->tableWidget->currentRow() + 1);
 }
 
 

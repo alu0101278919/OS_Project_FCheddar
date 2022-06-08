@@ -10,6 +10,7 @@
 #include "./scheduler.h"
 #include "./database.h"
 #include "./calendar.h"
+#include "./graph.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -36,6 +37,10 @@ private slots:
     void on_cleanButton_clicked();
     void on_calendarButton_clicked();
 
+    void on_actionRun_Scheduler_triggered();
+
+    void on_actionRestart_Scheduler_triggered();
+
 private:
     enum typeAction {OPEN, NEW};
 
@@ -49,5 +54,9 @@ private:
     const QModelIndex *lastIndex;
     Calendar* calendar;
 
+    Graph *graph;
+    QChartView *chartView;
+    QVBoxLayout *layout;
+    bool graph_exists;
 };
 #endif // MAINWINDOW_H

@@ -33,6 +33,8 @@ set(PROJECT_SOURCES
         calendar.h
         calendar.cpp
         calendar.ui
+        graph.h
+        graph.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
