@@ -6,15 +6,16 @@
 class Graph
 {
 public:
+    Graph();
     Graph(int, int, QVector<QString>, QVector<int>, QVector<int>, QVector<int>);
     ~Graph();
 
     void setTaskPen(QColor, int);
     void setActiveTaskPen(QColor, int);
 
-    QChart* get_chart(void);
+    QChart* get_chart(void) const;
     QByteArray get_chart_img(void);
-    int get_hyperperiod(void);
+    int get_hyperperiod(void) const;
 
     bool rms(void);
 

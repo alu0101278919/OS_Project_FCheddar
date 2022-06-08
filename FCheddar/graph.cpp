@@ -1,6 +1,7 @@
 #include "graph.h"
 #include <iostream>
 
+Graph::Graph() {}
 
 Graph::Graph(int task_num, int hyperperiod,
              QVector<QString> name_vect,
@@ -101,7 +102,7 @@ Graph::~Graph()
     if(chart) delete chart;
 }
 
-QChart* Graph::get_chart(void) {
+QChart* Graph::get_chart(void) const {
     return chart;
 }
 
@@ -110,11 +111,12 @@ QByteArray Graph::get_chart_img(void) {
    QPixmap p = chartView->grab();
    QByteArray bArray;
    QBuffer buffer(&bArray);
-   buffer.open(QIODevice::WriteOnly); p.save(&buffer, "PNG");
+   buffer.open(QIODevice::WriteOnly);
+   p.save(&buffer, "PNG");
    return bArray;
 }
 
-int Graph::get_hyperperiod(void) {
+int Graph::get_hyperperiod(void) const {
     return hyperperiod_;
 }
 

@@ -29,7 +29,7 @@ public:
     bool startDatabase(const QString &nameFile);
     bool configureDatabase();
     bool databaseIsOpen();
-    bool insertProject(const Scheduler&, const QByteArray&);
+    bool insertProject(const Scheduler& Project, const int hyperperiod, const QByteArray& graphImage);
 
     QString getError();
 

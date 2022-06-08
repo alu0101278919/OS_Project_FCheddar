@@ -15,8 +15,8 @@ MainWindow::MainWindow(QWidget *parent)
     , mModel(nullptr)
     , lastIndex(nullptr)
     , calendar(new Calendar)
-
-    , graph_exists(false)
+    , graph(new Graph)
+    , projectCreated(false)
 {
     ui->setupUi(this);
     setWindowTitle("FCheddar");
@@ -37,15 +37,8 @@ MainWindow::~MainWindow()
     delete layout;
 }
 
-
-// Open scheduler settings
-void MainWindow::on_actionScheduler_Settings_triggered()
-{
-    schedule->setModal(true);
-    schedule->setWindowTitle("Scheduler settings");
-    schedule->exec();
-
-    if (graph_exists) {
+void MainWindow::createGraph(bool itExists, bool run) {
+    if (itExists) {
         delete graph;
         delete chartView;
         delete layout;
@@ -57,90 +50,94 @@ void MainWindow::on_actionScheduler_Settings_triggered()
                       schedule->get_taskAT(),
                       schedule->get_taskPeriods(),
                       schedule->get_taskExecT());
-    graph_exists = true;
+
+    if (run) graph->rms();
 
     chartView = new QChartView(graph->get_chart());
     chartView->setRenderHint(QPainter::Antialiasing);
     layout = new QVBoxLayout(ui->plot);
     layout->addWidget(chartView);
+}
+
+
+// Open scheduler settings
+void MainWindow::on_actionScheduler_Settings_triggered()
+{
+    if (projectCreated) {
+        schedule->setModal(true);
+        schedule->setWindowTitle("Scheduler settings");
+        schedule->exec();
+        createGraph(true, false);
+    } else {
+        QMessageBox::critical(this, "Error", "No project has been created.");
+        return;
+    }
 }
 
 
 void MainWindow::on_actionRun_Scheduler_triggered()
 {
-    if (graph_exists) {
-        delete graph;
-        delete chartView;
-        delete layout;
+    if (projectCreated) {
+        createGraph(true, true);
+    } else {
+        QMessageBox::critical(this, "Error", "No project has been created.");
+        return;
     }
-
-    graph = new Graph(schedule->get_taskTable()->size(),
-                      schedule->calculate_hyperperiod(schedule->get_taskPeriods()),
-                      schedule->get_taskNames(),
-                      schedule->get_taskAT(),
-                      schedule->get_taskPeriods(),
-                      schedule->get_taskExecT());
-    graph_exists = true;
-
-    graph->rms();
-
-    chartView = new QChartView(graph->get_chart());
-    chartView->setRenderHint(QPainter::Antialiasing);
-    layout = new QVBoxLayout(ui->plot);
-    layout->addWidget(chartView);
 }
 
 
 void MainWindow::on_actionRestart_Scheduler_triggered()
 {
-    if (graph_exists) {
-        delete graph;
-        delete chartView;
-        delete layout;
-
-    graph = new Graph(schedule->get_taskTable()->size(),
-                      schedule->calculate_hyperperiod(schedule->get_taskPeriods()),
-                      schedule->get_taskNames(),
-                      schedule->get_taskAT(),
-                      schedule->get_taskPeriods(),
-                      schedule->get_taskExecT());
-    graph_exists = true;
-
-    chartView = new QChartView(graph->get_chart());
-    chartView->setRenderHint(QPainter::Antialiasing);
-    layout = new QVBoxLayout(ui->plot);
-    layout->addWidget(chartView);
+    if (projectCreated) {
+        createGraph(true, false);
+    } else {
+        QMessageBox::critical(this, "Error", "No project has been created.");
+        return;
     }
-    // Else, que salga un mensaje
 }
 
 
 void MainWindow::on_actionNew_Schedule_triggered()
 {
-    //Preguntar si está seguro
+    if(projectCreated) {
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Warning",
+                                     "Are you sure you want to create a new project?\nEverything that has not been saved will be lost.",
+                                     QMessageBox::Ok | QMessageBox::Cancel);
+        if (reply == QMessageBox::Cancel) {
+            return;
+        }
+    }
+
     schedule->setModal(true);
     schedule->setWindowTitle("Scheduler settings");
     schedule->exec();
+    createGraph(projectCreated, false);
+    projectCreated = true;
+}
 
 
-    if (graph_exists) {
-        delete graph;
-        delete chartView;
-        delete layout;
+void MainWindow::on_actionDeleteCurrent_Scheduler_triggered()
+{
+    if(projectCreated) {
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Warning",
+                                     "Are you sure you want to delete de current project?\nEverything that has not been saved will be lost.",
+                                     QMessageBox::Ok | QMessageBox::Cancel);
+        if (reply == QMessageBox::Cancel) {
+            return;
+        } else {
+            delete graph;
+            delete chartView;
+            delete layout;
+            delete schedule;
+            schedule = new Scheduler;
+            projectCreated = false;
+        }
+    } else {
+        QMessageBox::critical(this, "Error", "No project to delete.");
+        return;
     }
-
-    graph = new Graph(schedule->get_taskTable()->size(),
-                      schedule->calculate_hyperperiod(schedule->get_taskPeriods()),
-                      schedule->get_taskNames(),
-                      schedule->get_taskAT(),
-                      schedule->get_taskPeriods(),
-                      schedule->get_taskExecT());
-    graph_exists = true;
-
-    chartView = new QChartView(graph->get_chart());
-    chartView->setRenderHint(QPainter::Antialiasing);
-    layout = new QVBoxLayout(ui->plot);
-    layout->addWidget(chartView);
 }
 
 
@@ -171,7 +168,6 @@ void MainWindow::openDatabase(typeAction type_action) {
                                                 directory.absolutePath() + "/SQLDatabase.db",
                                                 "Database (*.db);; Any type(*.*)");
     }
-
     if (nameFile.isEmpty()){
         return;
     }
@@ -207,20 +203,21 @@ void MainWindow::on_connectToDatabase_clicked()
 //Insertar en base de datos
 void MainWindow::on_actionSave_triggered()
 {
+    if (!database->databaseIsOpen()) {
+        QMessageBox::critical(this, "Error", database->getError());
+        return;
+    } else if (!projectCreated) {
+        QMessageBox::critical(this, "Error", "No project created.");
+        return;
+    }
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "Warning",
-                                 "Are you sure that you want to save on the current database?",
+                                 "Are you sure you want to save on the current database?",
                                  QMessageBox::Ok | QMessageBox::Cancel);
 
     if (reply == QMessageBox::Cancel) {
         return;
-    }
-    if (!database->databaseIsOpen()) {
-        QMessageBox::critical(this, "Error", database->getError());
-        return;
-    }
-    QByteArray hola;
-    if (!database->insertProject(*schedule, hola)) {
+    } else if (!database->insertProject(*schedule, graph->get_hyperperiod(), graph->get_chart_img())) {
         QMessageBox::critical(this, "Error", database->getError());
         return;
     }
@@ -258,11 +255,11 @@ void MainWindow::on_projectTable_clicked(const QModelIndex &index)
             return;
     }
     lastIndex = &index;
-    insertarImagen(index);
+    insertImage(index);
 }
 
 
-void MainWindow::insertarImagen(const QModelIndex &index)
+void MainWindow::insertImage(const QModelIndex &index)
 {
     const int id = mModel->index(lastIndex->row(), 0).data().toInt(); // Obtenemos índice
     QSqlQuery query;
@@ -279,7 +276,7 @@ void MainWindow::insertarImagen(const QModelIndex &index)
         ui->imgGraph->setText("<b>Error de imagen</b>");
         return;
     }
-    pixmap = pixmap.scaled(ui->imgGraph->size(), Qt::IgnoreAspectRatio);
+    pixmap = pixmap.scaled(ui->imgGraph->size(), Qt::KeepAspectRatio);
     ui->imgGraph->setPixmap(pixmap);
 }
 

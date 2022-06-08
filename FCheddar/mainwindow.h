@@ -36,16 +36,17 @@ private slots:
     void on_filterButton_clicked();
     void on_cleanButton_clicked();
     void on_calendarButton_clicked();
-
     void on_actionRun_Scheduler_triggered();
-
     void on_actionRestart_Scheduler_triggered();
+
+    void on_actionDeleteCurrent_Scheduler_triggered();
 
 private:
     enum typeAction {OPEN, NEW};
 
     void openDatabase(typeAction);
-    void insertarImagen(const QModelIndex &index);
+    void insertImage(const QModelIndex &index);
+    void createGraph(bool, bool);
 
     Ui::MainWindow *ui;
     Scheduler* schedule;
@@ -57,6 +58,6 @@ private:
     Graph *graph;
     QChartView *chartView;
     QVBoxLayout *layout;
-    bool graph_exists;
+    bool projectCreated;
 };
 #endif // MAINWINDOW_H
