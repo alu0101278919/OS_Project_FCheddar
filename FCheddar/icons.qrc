@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>img/icons8-add-file-80.png</file>
+        <file>img/icons8-close-480.png</file>
+        <file>img/icons8-file-240.png</file>
+        <file>img/icons8-file-480.png</file>
+        <file>img/icons8-folder-480.png</file>
+        <file>img/icons8-next-80.png</file>
+        <file>img/icons8-restart-480.png</file>
+        <file>img/icons8-save-80.png</file>
+        <file>img/icons8-save-as-80.png</file>
+        <file>img/icons8-services-480.png</file>
+        <file>img/icons8-calendar-80.png</file>
+    </qresource>
+</RCC>
