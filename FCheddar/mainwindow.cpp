@@ -143,7 +143,6 @@ void MainWindow::on_actionDeleteCurrent_Scheduler_triggered()
 
 void MainWindow::on_openDatabaseButton_clicked()
 {
-    openDatabase(OPEN);
 }
 
 
@@ -186,11 +185,7 @@ void MainWindow::openDatabase(typeAction type_action) {
     ui->projectTable->setModel(mModel);
     ui->projectTable->hideColumn(0);
     ui->projectTable->hideColumn(6);
-    mModel->setHeaderData(1, Qt::Horizontal, "Project name");
-    mModel->setHeaderData(2, Qt::Horizontal, "Task number");
-    mModel->setHeaderData(3, Qt::Horizontal, "Hyperperiod");
-    mModel->setHeaderData(4, Qt::Horizontal, "Scheduleable");
-    mModel->setHeaderData(5, Qt::Horizontal, "Date");
+
 }
 
 // hacer de cliente
@@ -224,28 +219,6 @@ void MainWindow::on_actionSave_triggered()
     if (mModel) {
         mModel->select();
     }
-}
-
-
-void MainWindow::on_deleteButton_clicked()
-{
-    if (!database->databaseIsOpen()) {
-        QMessageBox::critical(this, "Error", database->getError());
-        return;
-    }
-    if (!mModel){
-        return;
-    }
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Warning",
-                                 "Are you sure that you want to delete the selected project?",
-                                 QMessageBox::Ok | QMessageBox::Cancel);
-    if (reply == QMessageBox::Cancel) {
-        return;
-    }
-    mModel->removeRows(ui->projectTable->currentIndex().row(),1);
-    mModel->select();
-    ui->imgGraph->setText("<b>No image</b>");
 }
 
 
