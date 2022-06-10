@@ -47,6 +47,7 @@ private:
     void openDatabase(typeAction);
     void insertImage(const QModelIndex &index);
     void createGraph(bool, bool);
+    bool is_plannable();
 
     Ui::MainWindow *ui;
     Scheduler* schedule;

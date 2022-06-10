@@ -35,6 +35,8 @@ set(PROJECT_SOURCES
         calendar.ui
         graph.h
         graph.cpp
+        rtalgorithms.h
+        rtalgorithms.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

@@ -3,6 +3,7 @@
 #include "./scheduler.h"
 #include "./database.h"
 #include "./calendar.h"
+#include "./rtalgorithms.h"
 
 #include <QCalendarWidget>
 #include <QDate>
@@ -59,6 +60,58 @@ void MainWindow::createGraph(bool itExists, bool run) {
     layout->addWidget(chartView);
 }
 
+bool MainWindow::is_plannable() {
+    QVector<QString> task_names = schedule->get_taskNames();
+    QVector<int> task_execT = schedule->get_taskExecT();
+    RTAlgorithms rms;
+    bool plannable;
+    QString init_text = "Priority algorithm: Rate monotonic scheduling.\nCalculating utilization factor...\n";
+    int uf_plannable = rms.rms_utilization_factor(schedule->get_taskTable()->size(),
+                                                  schedule->get_taskExecT(),
+                                                  schedule->get_taskPeriods());
+    float wc_rms = rms.get_worst_case();
+    QVector<float> uf_rms_vect = rms.get_taskUF();
+
+    QString uf_text = "Calculating utilization factor for each task:\n";
+    for(int i = 0; i < schedule->get_taskTable()->size(); i++) {
+        uf_text.append("task '" + task_names[i] + "' = " + QString::number(uf_rms_vect[i]) + "\n");
+    }
+    uf_text.append("Worst case U0: " + QString::number(wc_rms) + "\n");
+    if (uf_plannable == -1) {
+        uf_text.append(schedule->get_projectName() + " might not be plannable!\n");
+        uf_text.append("warranty test result = " + QString::number(rms.get_uf()) + "\n");
+        uf_text.append("Using time demand analysis to verify plannability...\n");
+        plannable = rms.rms_response_time(schedule->get_taskTable()->size(),
+                                                schedule->get_taskExecT(),
+                                                schedule->get_taskPeriods());
+        QVector<int> td_rms_vect = rms.get_time_demand();
+        QVector<bool> valid_td_vect = rms.get_is_valid();
+        uf_text.append("Calculating time demand value for each task:\n");
+        for(int i = 0; i < valid_td_vect.size(); i++) {
+            if(!valid_td_vect[i]) {
+                uf_text.append("task '" + task_names[i] + "' = " + QString::number(td_rms_vect[i]));
+                uf_text.append(" > " + QString::number(task_execT[i]) + " TD VALUE NOT VALID\n");
+                uf_text.append(schedule->get_projectName() + " NOT PLANNABLE!\n");
+                break;
+            }
+            uf_text.append("task '" + task_names[i] + "' = " + QString::number(td_rms_vect[i]) + "\n"); 
+        }
+        uf_text.append(schedule->get_projectName() + " is plannable!\n");
+    } else if (uf_plannable) {
+        uf_text.append(schedule->get_projectName() + " is plannable!\n");
+        uf_text.append("warranty test result = " + QString::number(rms.get_uf()) + "\n");
+        plannable = true;
+    } else {
+        uf_text.append(schedule->get_projectName() + " NOT PLANNABLE!\n");
+        uf_text.append("warranty test result = " + QString::number(rms.get_uf()) + "\n");
+        plannable = false;
+    }
+
+    QString display_text = init_text + uf_text;
+    ui->console_label->setText(display_text);
+    return plannable;
+}
+
 
 // Open scheduler settings
 void MainWindow::on_actionScheduler_Settings_triggered()
@@ -78,7 +131,9 @@ void MainWindow::on_actionScheduler_Settings_triggered()
 void MainWindow::on_actionRun_Scheduler_triggered()
 {
     if (projectCreated) {
-        createGraph(true, true);
+        if(is_plannable()) {
+          createGraph(true, true);
+        }
     } else {
         QMessageBox::critical(this, "Error", "No project has been created.");
         return;
@@ -106,6 +161,14 @@ void MainWindow::on_actionNew_Schedule_triggered()
                                      QMessageBox::Ok | QMessageBox::Cancel);
         if (reply == QMessageBox::Cancel) {
             return;
+        } else {
+            delete graph;
+            delete chartView;
+            delete layout;
+            delete schedule;
+            ui->console_label->clear();
+            schedule = new Scheduler;
+            projectCreated = false;
         }
     }
 
@@ -131,6 +194,7 @@ void MainWindow::on_actionDeleteCurrent_Scheduler_triggered()
             delete chartView;
             delete layout;
             delete schedule;
+            ui->console_label->clear();
             schedule = new Scheduler;
             projectCreated = false;
         }
