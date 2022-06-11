@@ -2,6 +2,7 @@
 #include "ui_client.h"
 
 #include <QMessageBox>
+#include <iostream>
 
 Client::Client(QWidget *parent) :
     QDialog(parent),
@@ -55,13 +56,22 @@ void Client::readyRead() {
     ui->listWidget->addItem("Server message: ");
     if (client->isReadable())
     {
-        QByteArray message = client->readAll(); // Read message
-        bool ok;
-        QString(message.front()).toInt(&ok);
-        if (!ok && message.front() != '\0') {
+        client->startTransaction();
+        char id;
+        if (client->getChar(&id)) {
+            if (id == 1) {
+                ui->listWidget->addItem("Text");
+            } else {
+                ui->listWidget->addItem("Image");
+            }
+        }
+
+        if (id == 1) {
+            QByteArray message = client->readAll(); // Read message
             ui->listWidget->addItem("Message: " + QString(message));
             return;
         }
+        client->rollbackTransaction();
         // El Datastream lee lo que le eches en el socket
         QDataStream in(client);
         // O es texto o cabecera
@@ -71,14 +81,14 @@ void Client::readyRead() {
                 // Se añade a los bytes recibidos
                 bytesReceived += sizeof(qint64) * 2;
                 if(imageSize == 0){
-                    ui->imagen_socket->setText("No image sent</b>");
+                    ui->imagen_socket->setText("<b>No image sent</b>");
                     return;
                 }
             }
             // Mientras la imagen no sea igual que el tamaño, no entramos
             // Esperamos a que la imagen esté entera
-            if((client->bytesAvailable() >= imageSize)
-                    && (imageSize != 0)) {
+            std::cout << client->bytesAvailable() << std::endl << std::flush;
+            if((client->bytesAvailable() >= imageSize) && (imageSize != 0)) {
                 // Guardamos en image conte
                 in >> imageContent;
                 // Obtenemos la imagen del dataStream
@@ -141,6 +151,12 @@ void Client::sendText(QString msg) {
 
 void Client::on_requestButton_clicked()
 {
-    sendText(ui->projectNameReqEdit->text());
+    sendText("info " + ui->projectNameReqEdit->text());
+}
+
+
+void Client::on_pushButton_clicked()
+{
+    sendText("img " + ui->projectNameReqEdit->text());
 }
 

@@ -31,6 +31,8 @@ private slots:
     void connected();
     void disconnected();
 
+    void on_pushButton_clicked();
+
 signals:
     void dataSet();
 

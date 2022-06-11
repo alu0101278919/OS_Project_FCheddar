@@ -3,6 +3,8 @@
 
 #include <QMessageBox>
 #include <QBuffer>
+#include <iostream>
+#include <unistd.h>
 
 
 
@@ -46,7 +48,9 @@ void ServerWidget::on_quit_clicked()
 
 
 void ServerWidget::sendText(QString msg) {
+    char id = 1;
     QTextStream T(mClientSocket);
+    T << id;
     T << msg;
     mClientSocket->flush();
 }
@@ -101,31 +105,41 @@ void ServerWidget::readyRead() {
             msgCounter++;
             return;
         } else {
-            QSqlQuery query;
-            query.exec(QString("SELECT projectName FROM FCheddar WHERE projectName='%1'").arg(QString(message)));
-            query.next();
-            if (query.value(0).toString().isEmpty()) {
-                ui->listWidget->addItem(QString(message) + " was not found.");
-                sendText(QString(message) + " was not found.");
-            } else {
-                // Enviamos la información del proyecto encontrado
-                sendText(QString(message) + " was found");
-
-                query.exec(QString("SELECT * FROM FCheddar WHERE projectName='%1'").arg(QString(message)));
+            if(QString(message).contains("info")) {
+                QString msg = QString(message).remove(QString("info "));
+                QSqlQuery query;
+                query.exec(QString("SELECT projectName FROM FCheddar WHERE projectName='%1'").arg(QString(msg)));
                 query.next();
-                QString answer = "Data " + QString(message) + "\nTask number: " + query.value(2).toString() +
-                        "\nHyperperiod: " + query.value(3).toString() +
-                        "\nScheduleable: " + query.value(4).toString() +
-                        "\nDate: " + query.value(5).toString() + "\n";
-                sendText(answer);
+                if (query.value(0).toString().isEmpty()) {
+                    ui->listWidget->addItem(QString(msg) + " was not found.");
+                    sendText(QString(msg) + " was not found.");
+                } else {
+                    // Enviamos la información del proyecto encontrado
+                    sendText(QString(msg) + " was found");
 
-
-                sendImage(query.value(6).toByteArray());
-
-                mClientSocket->waitForBytesWritten(3000);
-
-                ui->listWidget->addItem(QString(message) + " was sent");
-
+                    query.exec(QString("SELECT * FROM FCheddar WHERE projectName='%1'").arg(QString(msg)));
+                    query.next();
+                    QString answer = "Data " + QString(msg) + "\nTask number: " + query.value(2).toString() +
+                            "\nHyperperiod: " + query.value(3).toString() +
+                            "\nScheduleable: " + query.value(4).toString() +
+                            "\nDate: " + query.value(5).toString() + "\n";
+                    sendText(answer);
+                }
+            } else if (QString(message).contains("img")) {
+                QString msg = QString(message).remove(QString("img "));
+                QSqlQuery query;
+                query.exec(QString("SELECT projectName FROM FCheddar WHERE projectName='%1'").arg(QString(msg)));
+                query.next();
+                if (query.value(0).toString().isEmpty()) {
+                    ui->listWidget->addItem(QString(msg) + " was not found.");
+                    sendText(QString(msg) + " was not found.");
+                } else {
+                    // Enviamos la información del proyecto encontrado
+                    query.exec(QString("SELECT * FROM FCheddar WHERE projectName='%1'").arg(QString(msg)));
+                    query.next();
+                    sendImage(query.value(6).toByteArray());
+                    ui->listWidget->addItem(QString(msg) + " was sent");
+                }
             }
         }
         msgCounter++;
