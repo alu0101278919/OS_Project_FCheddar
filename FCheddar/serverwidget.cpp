@@ -7,7 +7,7 @@
 #include <unistd.h>
 
 
-
+// Constructor
 ServerWidget::ServerWidget(QWidget *parent, Database* database) :
     QDialog(parent),
     ui(new Ui::ServerWidget),
@@ -17,37 +17,52 @@ ServerWidget::ServerWidget(QWidget *parent, Database* database) :
     msgCounter(0)
 {
     ui->setupUi(this);
+    ui->lineEdit->setText("127.0.0.1");
     connect(mServerSocket, SIGNAL(newConnection()), this, SLOT(processPendingRequest()));
 }
 
 
+// Destructor
 ServerWidget::~ServerWidget()
 {
     delete ui;
+    if (mClientSocket->isOpen()) mClientSocket->deleteLater();
+    mServerSocket->deleteLater();
 }
 
 
+// Method that activates the listening of a port
 void ServerWidget::on_start_clicked()
 {
-    if (!mServerSocket->isListening()) {
-        if (!mServerSocket->listen(QHostAddress::Any, ui->portBox->value())) {
+    if (!mServerSocket->isListening())
+    {
+        if (!mServerSocket->listen(QHostAddress::Any, ui->portBox->value()))
+        {
             ui->listWidget->addItem(mServerSocket->errorString());
-        } else {
+        }
+        else
+        {
             ui->listWidget->addItem("Server started.");
         }
-    } else {
-        QMessageBox::critical(this, "Error", "Server is listening already.");
+    }
+    else
+    {
+        ui->listWidget->addItem("Server is already listening.");
     }
 }
 
 
-void ServerWidget::on_quit_clicked()
+// Method that disconnects
+void ServerWidget::on_disconnect_clicked()
 {
-    QDialog::close();
+    ui->listWidget->clear();
+    disconnected();
 }
 
 
-void ServerWidget::sendText(QString msg) {
+// Method to send text
+void ServerWidget::sendText(QString msg)
+{
     char id = 1;
     QTextStream T(mClientSocket);
     T << id;
@@ -56,7 +71,9 @@ void ServerWidget::sendText(QString msg) {
 }
 
 
-QByteArray ServerWidget::getImageData(const QPixmap &pixmap) {
+// Get image from pixmap to QByteArray
+QByteArray ServerWidget::getImageData(const QPixmap &pixmap)
+{
     QByteArray imageData;
     QBuffer buffer(&imageData);
     // Está la puse yo porque en mi caso paso de un pixmap
@@ -67,54 +84,59 @@ QByteArray ServerWidget::getImageData(const QPixmap &pixmap) {
 }
 
 
-void ServerWidget::sendImage(QByteArray img) {
-    // El buffer de los datos, que almacena el conjunto de bytes de la Imagen que se va a enviar por el DataStream
-    QByteArray outImageBlock;
-    // El objeto DataStream. Se "come" lo que le eches, no solo objetos QBytesArray
-    QDataStream sendOut(&outImageBlock, QIODevice::WriteOnly);
-    // Se reserva el tamañano donde se guarda la información del tamaño de la imagen y se mete ya el objeto en sí, en este
-    // caso la imagen
-    sendOut << qint64(0) << qint64(0) << img;
-    // El tamaño total es la suma de los tamaños de los bloques, en este caso un bloque con el tamaño de la imagen
-    // y la propia información
-    totalBytes += outImageBlock.size();
-    // Ahora sí metemos en el DataStream los tamaños sustituyendo al espacio asignado
-    // Para ello tenemos que volver al inicio
-    sendOut.device()->seek(0);
-    sendOut << totalBytes << qint64((outImageBlock.size() - sizeof(qint64)*2));
-    // Send the readyRead() signal
-    // Desde que se envía el readyRead del socket lo tiene en cuenta
-    mClientSocket->write(outImageBlock);
-    mClientSocket->flush();
-    // Esto sólo para que vean el debug, lo pueden BORRAR
-    ui->listWidget->addItem("Tamaño de la imagen: " + QString::number(outImageBlock.size() - sizeof(qint64)*2));
-    ui->listWidget->addItem("Tamaño entero del paquete que se envía: " + QString::number(totalBytes));
-    // Borramos lo que tenemos
-    outImageBlock.resize(0);
-    totalBytes = 0;
+// Method to send the image using the TCP protocol
+void ServerWidget::sendImage(QPixmap pixmapVal)
+{
+      QByteArray outImageBlock;  // Block to send
+      QDataStream sendOut(&outImageBlock, QIODevice::WriteOnly);
+      QString imageData = getImageData(pixmapVal);
+
+      sendOut << qint64(0) << qint64(0) << imageData;  // Data header
+      qint64 totalBytes = outImageBlock.size();
+
+      ui->listWidget->addItem("Data header: " + QString::number(sizeof(qint64)*2));
+      ui->listWidget->addItem("Image size: " + QString::number(outImageBlock.size() - sizeof(qint64)*2));
+      ui->listWidget->addItem("Block size: " + QString::number(totalBytes));
+
+      sendOut.device()->seek(0);
+      sendOut << totalBytes << qint64((outImageBlock.size() - sizeof(qint64)*2));  // Header: totalBytes and imgSize
+
+      mClientSocket->write(outImageBlock);
+      mClientSocket->flush();
+
+      outImageBlock.resize(0);
 }
 
 
-void ServerWidget::readyRead() {
+// Method that is called each time the readyRead signal of the mClientSocket is activated
+void ServerWidget::readyRead()
+{
     ui->listWidget->addItem("Process request");
     if (mClientSocket->isReadable())
     {
         QByteArray message = mClientSocket->readAll(); // Read message
         ui->listWidget->addItem("Message: " + QString(message));
-        if(!msgCounter) {
+        if(!msgCounter)
+        {
             msgCounter++;
             return;
-        } else {
-            if(QString(message).contains("info")) {
+        }
+        else
+        {
+            if(QString(message).contains("info"))
+            { // filter to know if the client is asking for info or img
                 QString msg = QString(message).remove(QString("info "));
                 QSqlQuery query;
                 query.exec(QString("SELECT projectName FROM FCheddar WHERE projectName='%1'").arg(QString(msg)));
                 query.next();
-                if (query.value(0).toString().isEmpty()) {
+                if (query.value(0).toString().isEmpty())
+                {
                     ui->listWidget->addItem(QString(msg) + " was not found.");
                     sendText(QString(msg) + " was not found.");
-                } else {
-                    // Enviamos la información del proyecto encontrado
+                }
+                else
+                {
+                    // We send the information of the project found
                     sendText(QString(msg) + " was found");
 
                     query.exec(QString("SELECT * FROM FCheddar WHERE projectName='%1'").arg(QString(msg)));
@@ -125,20 +147,27 @@ void ServerWidget::readyRead() {
                             "\nDate: " + query.value(5).toString() + "\n";
                     sendText(answer);
                 }
-            } else if (QString(message).contains("img")) {
+            }
+            else if (QString(message).contains("img"))
+            {
                 QString msg = QString(message).remove(QString("img "));
                 QSqlQuery query;
                 query.exec(QString("SELECT projectName FROM FCheddar WHERE projectName='%1'").arg(QString(msg)));
                 query.next();
-                if (query.value(0).toString().isEmpty()) {
+                if (query.value(0).toString().isEmpty())
+                {
                     ui->listWidget->addItem(QString(msg) + " was not found.");
                     sendText(QString(msg) + " was not found.");
-                } else {
-                    // Enviamos la información del proyecto encontrado
+                }
+                else
+                {
+                    // We send the information of the project found
                     query.exec(QString("SELECT * FROM FCheddar WHERE projectName='%1'").arg(QString(msg)));
                     query.next();
-                    sendImage(query.value(6).toByteArray());
-                    ui->listWidget->addItem(QString(msg) + " was sent");
+
+                    QPixmap pixmap;
+                    pixmap.loadFromData(query.value(6).toByteArray());
+                    sendImage(pixmap);
                 }
             }
         }
@@ -151,20 +180,47 @@ void ServerWidget::readyRead() {
 }
 
 
-void ServerWidget::processPendingRequest() {
+// Method called by the new connections signal and binds the corresponding readyRead
+// signal to the readyRead method of the class
+void ServerWidget::processPendingRequest()
+{
     while (mServerSocket->hasPendingConnections())
     {
         mClientSocket = mServerSocket->nextPendingConnection();
         connect(mClientSocket, SIGNAL(readyRead()), SLOT(readyRead()));
-        connect(mClientSocket, SIGNAL(disconnected()), SLOT(disconnected()));
     }
 }
 
+
+// Method to disconnect the current socket
+void ServerWidget::disconnected_socket()
+{
+    if(mClientSocket->isOpen())
+    {
+        disconnect(mClientSocket, SIGNAL(readyRead()));
+        ui->listWidget->addItem("Socket disconnected");
+        mClientSocket->close();
+    }
+}
+
+
+// Method to disconnect the server (stop listening to the current port)
 void ServerWidget::disconnected()
 {
-    disconnect(mClientSocket, SIGNAL(readyRead()));
-    disconnect(mClientSocket, SIGNAL(disconnected()));
-    mClientSocket->deleteLater();
+    if (mClientSocket->isOpen())
+    {
+        disconnected_socket();
+    }
+    if(mServerSocket->isListening())
+    {
+        mServerSocket->close();
+        ui->listWidget->addItem("Server disconnected.");
+    }
+    else
+    {
+        ui->listWidget->addItem("Server is already disconnected.");
+    }
+
 }
 
 

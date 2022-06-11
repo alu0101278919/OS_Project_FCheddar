@@ -19,29 +19,25 @@ public:
     ~Client();
 
     QImage getImage(const QString &data);
-    QListWidgetItem* getText(const int index) const;
 
 
 private slots:
     void on_connectButton_clicked();
-    void on_quitButton_clicked();
     void on_requestButton_clicked();
+    void on_imgReqButton_clicked();
+    void on_disconnectButton_clicked();
+    void on_clearButton_clicked();
 
     void readyRead();
     void connected();
     void disconnected();
-
-    void on_pushButton_clicked();
-
-signals:
-    void dataSet();
 
 private:
     void sendText(QString msg);
 
 
     Ui::Client *ui;
-    QTcpSocket *client;
+    QTcpSocket *mClientSocket;
     qint64 bytesReceived;  // The size of the received data
     qint64 imageSize;      //Image size
     qint64 totalBytes;     // Store total size information

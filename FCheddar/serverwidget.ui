@@ -39,9 +39,9 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="quit">
+        <widget class="QPushButton" name="disconnect">
          <property name="text">
-          <string>Quit</string>
+          <string>Disconnect</string>
          </property>
         </widget>
        </item>
@@ -52,7 +52,7 @@
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>Server name:</string>
+          <string>Server address</string>
          </property>
         </widget>
        </item>

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>441</width>
-    <height>296</height>
+    <width>886</width>
+    <height>590</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -64,7 +64,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="imgReqButton">
          <property name="text">
           <string>Request image</string>
          </property>
@@ -75,7 +75,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QLabel" name="imagen_socket">
+        <widget class="QLabel" name="socketImage">
          <property name="minimumSize">
           <size>
            <width>161</width>
@@ -102,6 +102,13 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
+        <widget class="QPushButton" name="clearButton">
+         <property name="text">
+          <string>Clear</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -122,9 +129,9 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="quitButton">
+        <widget class="QPushButton" name="disconnectButton">
          <property name="text">
-          <string>Quit</string>
+          <string>Disconnect</string>
          </property>
         </widget>
        </item>

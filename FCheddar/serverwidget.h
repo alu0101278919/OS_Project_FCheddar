@@ -22,14 +22,15 @@ public:
 
 private slots:
     void on_start_clicked();
-    void on_quit_clicked();
+    void on_disconnect_clicked();
     void processPendingRequest();
     void readyRead();
+    void disconnected_socket();
     void disconnected();
 
 private:
     void sendText(QString msg);
-    void sendImage(QByteArray img);
+    void sendImage(QPixmap img);
 
     QByteArray getImageData(const QPixmap &pixmap);
 
@@ -39,11 +40,6 @@ private:
     QString ProjectRequest;
     Database* mDatabase;
     int msgCounter;
-
-
-    QImage *imageObject;
-    QPixmap image;
-    qint64 totalBytes;
 };
 
 #endif // SERVERWIDGET_H
