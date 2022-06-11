@@ -24,6 +24,9 @@ void Task::on_buttonBox_accepted()
     } else if (ui->execTime->value() > ui->period->value()) {
         QMessageBox::warning(this, "Warning", "Time execution must be greater than period.");
         return;
+    } else if (ui->arrivalTime->value() != 0) {
+        QMessageBox::warning(this, "Warning", "Arrival Time must be cero.");
+        return;
     }
     accept();
 }

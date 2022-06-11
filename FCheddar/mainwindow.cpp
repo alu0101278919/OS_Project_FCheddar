@@ -3,9 +3,12 @@
 #include "./scheduler.h"
 #include "./database.h"
 #include "./calendar.h"
+#include "./client.h"
+#include "./serverwidget.h"
 
 #include <QCalendarWidget>
 #include <QDate>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -22,9 +25,18 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle("FCheddar");
     ui->imgGraph->setText("<b>No image</b>");
     ui->projectTable->setContextMenuPolicy(Qt::ActionsContextMenu);
-    //ui->projectTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch); // para que las columnas completen el View
     ui->projectTable->horizontalHeader()->setStretchLastSection(true);
     ui->imgGraph->setScaledContents(true);
+
+    QColor color(190,190,190);
+    QPalette pal = QPalette();
+    pal.setColor(QPalette::Window, color);
+
+
+
+    ui->filterWidget->setAutoFillBackground(true);
+    ui->filterWidget->setPalette(pal);
+    ui->filterWidget->show();
 }
 
 
@@ -32,12 +44,16 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete schedule;
-    delete graph;
-    delete chartView;
-    delete layout;
+    if (projectCreated) {
+        delete graph;
+        delete chartView;
+        delete layout;
+    }
 }
 
-void MainWindow::createGraph(bool itExists, bool run) {
+
+void MainWindow::createGraph(bool itExists, bool run)
+{
     if (itExists) {
         delete graph;
         delete chartView;
@@ -77,6 +93,7 @@ void MainWindow::on_actionScheduler_Settings_triggered()
 
 void MainWindow::on_actionRun_Scheduler_triggered()
 {
+    ui->tabWidget->setCurrentIndex(0);
     if (projectCreated) {
         createGraph(true, true);
     } else {
@@ -88,6 +105,7 @@ void MainWindow::on_actionRun_Scheduler_triggered()
 
 void MainWindow::on_actionRestart_Scheduler_triggered()
 {
+    ui->tabWidget->setCurrentIndex(0);
     if (projectCreated) {
         createGraph(true, false);
     } else {
@@ -99,6 +117,7 @@ void MainWindow::on_actionRestart_Scheduler_triggered()
 
 void MainWindow::on_actionNew_Schedule_triggered()
 {
+    ui->tabWidget->setCurrentIndex(0);
     if(projectCreated) {
         QMessageBox::StandardButton reply;
         reply = QMessageBox::question(this, "Warning",
@@ -119,6 +138,7 @@ void MainWindow::on_actionNew_Schedule_triggered()
 
 void MainWindow::on_actionDeleteCurrent_Scheduler_triggered()
 {
+    ui->tabWidget->setCurrentIndex(0);
     if(projectCreated) {
         QMessageBox::StandardButton reply;
         reply = QMessageBox::question(this, "Warning",
@@ -143,15 +163,17 @@ void MainWindow::on_actionDeleteCurrent_Scheduler_triggered()
 
 void MainWindow::on_openDatabaseButton_clicked()
 {
+    ui->tabWidget->setCurrentIndex(1);
     openDatabase(OPEN);
 }
 
 
-
 void MainWindow::on_newDatabaseButton_clicked()
 {
+    ui->tabWidget->setCurrentIndex(1);
     openDatabase(NEW);
 }
+
 
 void MainWindow::openDatabase(typeAction type_action) {
     QString nameFile;
@@ -168,7 +190,7 @@ void MainWindow::openDatabase(typeAction type_action) {
                                                 directory.absolutePath() + "/SQLDatabase.db",
                                                 "Database (*.db);; Any type(*.*)");
     }
-    if (nameFile.isEmpty()){
+    if (nameFile.isEmpty()) {
         return;
     }
     if (!database->startDatabase(nameFile)) {
@@ -193,16 +215,33 @@ void MainWindow::openDatabase(typeAction type_action) {
     mModel->setHeaderData(5, Qt::Horizontal, "Date");
 }
 
+
 // hacer de cliente
 void MainWindow::on_connectToDatabase_clicked()
 {
+    Client client(this);
+    client.setWindowTitle("Client tcp");
+    client.exec();
+}
 
+
+void MainWindow::on_actionServer_Database_triggered()
+{
+    if (!database->databaseIsOpen()) {
+        QMessageBox::critical(this, "Error", database->getError());
+        return;
+    }
+    ui->tabWidget->setCurrentIndex(1);
+    ServerWidget server(this);
+    server.setWindowTitle("Server tcp");
+    server.exec();
 }
 
 
 //Insertar en base de datos
 void MainWindow::on_actionSave_triggered()
 {
+    ui->tabWidget->setCurrentIndex(1);
     if (!database->databaseIsOpen()) {
         QMessageBox::critical(this, "Error", database->getError());
         return;
@@ -214,7 +253,6 @@ void MainWindow::on_actionSave_triggered()
     reply = QMessageBox::question(this, "Warning",
                                  "Are you sure you want to save on the current database?",
                                  QMessageBox::Ok | QMessageBox::Cancel);
-
     if (reply == QMessageBox::Cancel) {
         return;
     } else if (!database->insertProject(*schedule, graph->get_hyperperiod(), graph->get_chart_img())) {
@@ -276,9 +314,10 @@ void MainWindow::insertImage(const QModelIndex &index)
         ui->imgGraph->setText("<b>Error de imagen</b>");
         return;
     }
-    pixmap = pixmap.scaled(ui->imgGraph->size(), Qt::KeepAspectRatio);
+    pixmap = pixmap.scaled(pixmap.size(),  Qt::KeepAspectRatio);
     ui->imgGraph->setPixmap(pixmap);
 }
+
 
 void MainWindow::on_filterButton_clicked()
 {
@@ -286,7 +325,6 @@ void MainWindow::on_filterButton_clicked()
         QMessageBox::critical(this, "Error", database->getError());
         return;
     }
-
     QString filter;
     bool previous = false;
     if (!ui->projectNameEdit->text().isEmpty()) {
@@ -340,11 +378,11 @@ void MainWindow::on_calendarButton_clicked()
     }
     calendar->setModal(true);
     calendar->setWindowTitle("Calendar settings");
-
     if (calendar->exec() == QDialog::Rejected) {
         return;
     }
     ui->calendarEdit->clear();
     ui->calendarEdit->setText(calendar->get_selectedDate());
 }
+
 

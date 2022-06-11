@@ -41,6 +41,8 @@ private slots:
 
     void on_actionDeleteCurrent_Scheduler_triggered();
 
+    void on_actionServer_Database_triggered();
+
 private:
     enum typeAction {OPEN, NEW};
 

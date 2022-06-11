@@ -131,8 +131,6 @@ void Scheduler::on_deleteButton_clicked()
     if (reply == QMessageBox::Cancel) {
         return;
     }
-    std::cout << ui->tableWidget->rowCount() << std::endl << std::flush;
-
     ui->tableWidget->removeRow(ui->tableWidget->currentRow());
     taskTable->erase(taskTable->constBegin() + ui->tableWidget->currentRow() + 1);
 }
