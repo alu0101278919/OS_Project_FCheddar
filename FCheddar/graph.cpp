@@ -7,7 +7,12 @@ Graph::Graph(int task_num, int hyperperiod,
              QVector<QString> name_vect,
              QVector<int> arrivalT_vect,
              QVector<int> period_vect,
-             QVector<int> execT_vect)
+             QVector<int> execT_vect,
+             QVector<bool> hide_vect,
+             QColor activeColor,
+             QColor baseColor,
+             int xSeparation,
+             QString project_name)
 {
     // Initializing attributes
     hyperperiod_ = hyperperiod;
@@ -16,7 +21,11 @@ Graph::Graph(int task_num, int hyperperiod,
     arrivalT_vect_ = arrivalT_vect;
     period_vect_ = period_vect;
     execT_vect_ = execT_vect;
+    hide_vect_ = hide_vect;
     arrival_period_vect.resize(task_num_);
+    activeTaskPenColor = activeColor;
+    taskPenColor = baseColor;
+    xAxisSeparation = xSeparation;
 
     for(int i = 0; i < task_num_; i++) {
         for(int j = arrivalT_vect_[i]; j <= hyperperiod_; j += period_vect_[i]) {
@@ -25,8 +34,8 @@ Graph::Graph(int task_num, int hyperperiod,
     }
 
     // Initialize QPens
-    setTaskPen(Qt::black, 1);
-    setActiveTaskPen(Qt::blue, 5);
+    setTaskPen(taskPenColor, 1);
+    setActiveTaskPen(activeTaskPenColor, 5);
 
     // Initialize axis
     axisX = new QValueAxis;
@@ -41,7 +50,7 @@ Graph::Graph(int task_num, int hyperperiod,
     font.setPixelSize(18);
     chart->setTitleFont(font);
     chart->setTitleBrush(QBrush(Qt::black));
-    chart->setTitle("FCheddar");
+    chart->setTitle(project_name);
 
     // Customize axis label font
     QFont labelsFont;
@@ -72,7 +81,7 @@ Graph::Graph(int task_num, int hyperperiod,
 
     axisY->setRange(0, task_num_);
 
-    axisX->setTickCount((hyperperiod_ / 5) + 1);
+    axisX->setTickCount((hyperperiod_ / xAxisSeparation) + 1);
     axisY->setTickCount(task_num_);
 
     chart->addAxis(axisX, Qt::AlignBottom);
@@ -85,9 +94,11 @@ Graph::Graph(int task_num, int hyperperiod,
         *taskLines_[i] << QPointF(0, 0.5 + i) << QPointF(hyperperiod_, 0.5 + i);
         taskLines_[i]->setPen(taskPen);
         axisY->append(name_vect[i], i+1);
-        chart->addSeries(taskLines_[i]);
-        taskLines_[i]->attachAxis(axisX);
-        taskLines_[i]->attachAxis(axisY);
+        if (hide_vect_[i]) {
+            chart->addSeries(taskLines_[i]);
+            taskLines_[i]->attachAxis(axisX);
+            taskLines_[i]->attachAxis(axisY);
+        }
     }
     activeTaskLines_.resize(task_num_);
 }
@@ -130,6 +141,18 @@ void Graph::setActiveTaskPen(QColor color, int width) {
     activeTaskPen.setWidth(width);
 }
 
+void Graph::set_taskPenColor(QColor color) {
+    taskPenColor = color;
+}
+
+void Graph::set_activeTaskPenColor(QColor color) {
+    activeTaskPenColor = color;
+}
+
+void Graph::set_xAxisSeparation(int separation) {
+    xAxisSeparation = separation;
+}
+
 bool Graph::rms(void) {
     QVector<std::pair<int, int> > buffer;  // Execution queue
     for(int i = 0; i < hyperperiod_; i++) {
@@ -153,11 +176,13 @@ bool Graph::rms(void) {
         }
     }
     for(int i = 0; i < activeTaskLines_.size(); i++) {
-        for(int j = 0; j < activeTaskLines_[i].size(); j++) {
-            activeTaskLines_[i][j]->setPen(activeTaskPen);
-            chart->addSeries(activeTaskLines_[i][j]);
-            activeTaskLines_[i][j]->attachAxis(axisX);
-            activeTaskLines_[i][j]->attachAxis(axisY);
+        if(hide_vect_[i]) {
+            for(int j = 0; j < activeTaskLines_[i].size(); j++) {
+                activeTaskLines_[i][j]->setPen(activeTaskPen);
+                chart->addSeries(activeTaskLines_[i][j]);
+                activeTaskLines_[i][j]->attachAxis(axisX);
+                activeTaskLines_[i][j]->attachAxis(axisY);
+            }
         }
     }
     // Si al final del for el buffer no está vacio, NO ES PLANIFICABLE.

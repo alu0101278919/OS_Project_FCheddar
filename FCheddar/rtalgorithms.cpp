@@ -3,6 +3,7 @@
 
 RTAlgorithms::RTAlgorithms() {}
 
+// GETTERS
 QVector<float> RTAlgorithms::get_taskUF(void) {
     return taskUF;
 }
@@ -23,6 +24,10 @@ QVector<bool> RTAlgorithms::get_is_valid(void) {
     return is_valid;
 }
 
+// UF for RMS (Rate Monotonic Scheduling)
+// returns 1 if the project is plannable
+// returns 0 if the project is not plannable
+// returns -1 if its not posible to verify plannability
 int RTAlgorithms::rms_utilization_factor(int n, QVector<int> execT_vect, QVector<int> period_vect) {
     worst_case = ((float)n * (std::pow(2.0, 1.0/(float)n) - 1.0));
     uf = 0.0;
@@ -40,9 +45,10 @@ int RTAlgorithms::rms_utilization_factor(int n, QVector<int> execT_vect, QVector
     }
 }
 
-// Response time calculation
+// Response time calculation for RMS (Rate Monotonic Scheduling)
 // w(t) = execT[i] + summatory((w(t)[i - 1] / period[j]) * execT[j])
 // if (w <= period[i]) then w is_valid for i task
+// Returns true if the project is plannable and false if its not.
 bool RTAlgorithms::rms_response_time(int num_tasks, QVector<int> execT_vect, QVector<int> period_vect) {
     int time_demand;  // w(t)[i]
     int iterator;

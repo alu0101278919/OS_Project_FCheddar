@@ -7,7 +7,7 @@ class Graph
 {
 public:
     Graph();
-    Graph(int, int, QVector<QString>, QVector<int>, QVector<int>, QVector<int>);
+    Graph(int, int, QVector<QString>, QVector<int>, QVector<int>, QVector<int>, QVector<bool>, QColor, QColor, int, QString);
     ~Graph();
 
     void setTaskPen(QColor, int);
@@ -16,6 +16,10 @@ public:
     QChart* get_chart(void) const;
     QByteArray get_chart_img(void);
     int get_hyperperiod(void) const;
+
+    void set_taskPenColor(QColor);
+    void set_activeTaskPenColor(QColor);
+    void set_xAxisSeparation(int);
 
     bool rms(void);
 
@@ -29,6 +33,7 @@ private:
     QVector<int> arrivalT_vect_;
     QVector<int> period_vect_;
     QVector<int> execT_vect_;
+    QVector<bool> hide_vect_;
     QVector<QVector<int> > arrival_period_vect;
 
     //Graph Attributes
@@ -37,6 +42,9 @@ private:
     QPen activeTaskPen;
     QValueAxis *axisX;
     QCategoryAxis *axisY;
+    QColor taskPenColor;
+    QColor activeTaskPenColor;
+    int xAxisSeparation;
 };
 
 #endif // GRAPH_H

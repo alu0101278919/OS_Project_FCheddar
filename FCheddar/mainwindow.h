@@ -11,6 +11,7 @@
 #include "./database.h"
 #include "./calendar.h"
 #include "./graph.h"
+#include "./settings.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -23,6 +24,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    void writeSettings();
+    void readSettings();
 
 private slots:
     void on_actionScheduler_Settings_triggered();
@@ -41,6 +45,10 @@ private slots:
 
     void on_actionDeleteCurrent_Scheduler_triggered();
 
+    void on_actionWindow_settings_triggered();
+
+    void on_actionSave_Graph_as_png_triggered();
+
 private:
     enum typeAction {OPEN, NEW};
 
@@ -55,6 +63,7 @@ private:
     QSqlTableModel *mModel;
     const QModelIndex *lastIndex;
     Calendar* calendar;
+    Settings* settings;
 
     Graph *graph;
     QChartView *chartView;

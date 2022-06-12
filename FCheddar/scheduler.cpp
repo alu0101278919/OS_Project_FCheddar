@@ -5,8 +5,9 @@
 #include <numeric>
 
 #include <QMessageBox>
+#include <QCheckBox>
 
-
+// Calculate greatest common divisor.
 int gcd(int a, int b)
 {
     while(true)
@@ -18,6 +19,7 @@ int gcd(int a, int b)
     }
 }
 
+// Calculate lowest common multiple
 int lcm(int a, int b)
 {
     int temp = gcd(a, b);
@@ -25,25 +27,28 @@ int lcm(int a, int b)
     return temp ? (a / temp * b) : 0;
 }
 
+// Scheduler Constructor
 Scheduler::Scheduler(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Scheduler),
     taskTable(new QVector<taskInfo>)
 {
     QStringList titles;
-    titles << "Task name" << "Arrival Time" << "Execution time" << "Period";
+    titles << "Task name" << "Arrival Time" << "Execution time" << "Period" << "Hide";
     ui->setupUi(this);
-    ui->tableWidget->setColumnCount(4);
+    ui->tableWidget->setColumnCount(5);
     ui->tableWidget->setHorizontalHeaderLabels(titles);
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch); // para que las columnas completen el widget
 }
 
+// Scheduler Destructor
 Scheduler::~Scheduler()
 {
     delete ui;
     delete taskTable;
 }
 
+// GETTERS
 QString Scheduler::get_projectName(void) const {
     return projectName;
 }
@@ -84,11 +89,20 @@ QVector<int> Scheduler::get_taskExecT(void) const {
     return vect;
 }
 
+QVector<bool> Scheduler::get_hidden_tasks(void) const {
+    QVector<bool> vect;
+    for(int i = 0; i < taskTable->size(); i++) {
+        vect.push_back((*taskTable)[i].hide);
+    }
+    return vect;
+}
+
+// Adds up all lowest common multiples from all tasks which gives the hyperperiod.
 int Scheduler::calculate_hyperperiod(QVector<int> vect) {
     return std::accumulate(vect.begin(), vect.end(), 1, lcm);
 }
 
-// Add task
+// Add a task to the project and includes it in a QTableWidget
 void Scheduler::on_addButton_clicked()
 {
     Task task(this);
@@ -103,21 +117,31 @@ void Scheduler::on_addButton_clicked()
     current_task.arrivalT = task.arrivalTime();
     current_task.period = task.period();
     current_task.execT = task.execTime();
+    current_task.hide = false;
 
     taskTable->push_back(current_task);
 
+    QWidget *checkBoxWidget = new QWidget();
+    QCheckBox *checkBox = new QCheckBox();      // We declare and initialize the checkbox
+    QHBoxLayout *layoutCheckBox = new QHBoxLayout(checkBoxWidget); // create a layer with reference to the widget
+    layoutCheckBox->addWidget(checkBox);            // Set the checkbox in the layer
+    layoutCheckBox->setAlignment(Qt::AlignCenter);  // Center the checkbox
+    layoutCheckBox->setContentsMargins(0,0,0,0);
+    checkBox->setChecked(false);
+
     ui->tableWidget->insertRow(ui->tableWidget->rowCount());
     int row = ui->tableWidget->rowCount() - 1;
+    ui->tableWidget->setCellWidget(row, HIDE, checkBoxWidget);
     ui->tableWidget->setItem(row, TASK_NAME, new QTableWidgetItem(task.taskName()));
     ui->tableWidget->setItem(row, ARRIVAL_T, new QTableWidgetItem(QString::number(task.arrivalTime())));
     ui->tableWidget->setItem(row, EXEC_T, new QTableWidgetItem(QString::number(task.execTime())));
     ui->tableWidget->setItem(row, PERIOD, new QTableWidgetItem(QString::number(task.period())));
 
     ui->tableWidget->sortItems(PERIOD, Qt::AscendingOrder);
-    std::sort(taskTable->begin(), taskTable->end());
+    std::sort(taskTable->begin(), taskTable->end()); // Order tasks by period (bigger period means lower priority)
 }
 
-
+// Deletes a task from the project and reorders task by period.
 void Scheduler::on_deleteButton_clicked()
 {
     if (!ui->tableWidget->rowCount()) {
@@ -145,6 +169,14 @@ void Scheduler::on_AcceptRejectButtons_accepted()
         return;
     }
     projectName = ui->projectName->text();
+    for(int i = 0; i < ui->tableWidget->rowCount(); i++) {
+        QWidget *pWidget = ui->tableWidget->cellWidget(i, HIDE);
+        QCheckBox *checkbox = pWidget->findChild<QCheckBox *>();
+        if (checkbox && checkbox->isChecked())
+            (*taskTable)[i].hide = false;
+        else
+            (*taskTable)[i].hide = true;
+    }
     accept();
 }
 

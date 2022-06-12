@@ -4,10 +4,12 @@
 #include "./database.h"
 #include "./calendar.h"
 #include "./rtalgorithms.h"
+#include "./settings.h"
 
 #include <QCalendarWidget>
 #include <QDate>
 
+// MainWindow Constructor
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -18,8 +20,11 @@ MainWindow::MainWindow(QWidget *parent)
     , calendar(new Calendar)
     , graph(new Graph)
     , projectCreated(false)
+    , settings(new Settings)
 {
     ui->setupUi(this);
+    readSettings();
+
     setWindowTitle("FCheddar");
     ui->imgGraph->setText("<b>No image</b>");
     ui->projectTable->setContextMenuPolicy(Qt::ActionsContextMenu);
@@ -28,16 +33,63 @@ MainWindow::MainWindow(QWidget *parent)
     ui->imgGraph->setScaledContents(true);
 }
 
-
+// MainWindow Destructor
 MainWindow::~MainWindow()
 {
+    writeSettings();
     delete ui;
     delete schedule;
+    delete settings;
     delete graph;
     delete chartView;
     delete layout;
 }
 
+// Saves Program Settings.
+void MainWindow::writeSettings()
+{
+    QSettings program_settings("FCheddarSettings", "ULL_Jaime&Anabel");
+
+    program_settings.beginGroup("MainWindow");
+    program_settings.setValue("geometry", saveGeometry());
+    program_settings.setValue("activePenColor", settings->get_active_color());
+    program_settings.setValue("penColor", settings->get_base_color());
+    program_settings.setValue("xAxisSeparation", settings->x_size());
+    program_settings.endGroup();
+}
+
+// Loads Program Settings.
+void MainWindow::readSettings()
+{
+    QSettings program_settings("FCheddarSettings", "ULL_Jaime&Anabel");
+
+    program_settings.beginGroup("MainWindow");
+    const auto geometry = program_settings.value("geometry", QByteArray()).toByteArray();  // Window Size
+    if (geometry.isEmpty())
+        setGeometry(200, 200, 800, 649);
+    else
+        restoreGeometry(geometry);
+
+    if (!program_settings.value("activePenColor").isNull()) {
+        settings->set_active_color(program_settings.value("activePenColor").value<QColor>());
+    }
+
+    if (!program_settings.value("penColor").isNull()) {
+        settings->set_color(program_settings.value("penColor").value<QColor>());
+    }
+
+    if (!program_settings.value("xAxisSeparation").isNull()) {
+        settings->set_x_size(program_settings.value("xAxisSeparation").toInt());
+    }
+    program_settings.endGroup();
+}
+
+// Function createGraph() is used to create a graph if its not created and to refresh
+// an existing graph with new parameters.
+// Parameter itExists is used to determine whether a graph has been created before calling
+// this function.
+// Parameter run is used to determine whether we want to ilustrate the simulation results
+// on the graph or not.
 void MainWindow::createGraph(bool itExists, bool run) {
     if (itExists) {
         delete graph;
@@ -50,7 +102,12 @@ void MainWindow::createGraph(bool itExists, bool run) {
                       schedule->get_taskNames(),
                       schedule->get_taskAT(),
                       schedule->get_taskPeriods(),
-                      schedule->get_taskExecT());
+                      schedule->get_taskExecT(),
+                      schedule->get_hidden_tasks(),
+                      settings->get_active_color(),
+                      settings->get_base_color(),
+                      settings->x_size(),
+                      schedule->get_projectName());
 
     if (run) graph->rms();
 
@@ -60,55 +117,57 @@ void MainWindow::createGraph(bool itExists, bool run) {
     layout->addWidget(chartView);
 }
 
+// is_plannable returns true if the current project is plannable. It uses usability factor
+// algorithm as a first aproach to determine whether it is or not plannable. This algorithm
+// returns the value 1 if it is plannable, 0 if its not and -1 if plannability was not able to
+// be determined. Given the last case, we use TDA (Time Demand Analysis) to determine the projects
+// plannability, if this function returns true the project is plannable, false if its not.
 bool MainWindow::is_plannable() {
     QVector<QString> task_names = schedule->get_taskNames();
     QVector<int> task_execT = schedule->get_taskExecT();
     RTAlgorithms rms;
     bool plannable;
-    QString init_text = "Priority algorithm: Rate monotonic scheduling.\nCalculating utilization factor...\n";
+    ui->listWidget->addItem("Priority algorithm: Rate monotonic scheduling.\nCalculating utilization factor...\n");
     int uf_plannable = rms.rms_utilization_factor(schedule->get_taskTable()->size(),
                                                   schedule->get_taskExecT(),
                                                   schedule->get_taskPeriods());
     float wc_rms = rms.get_worst_case();
     QVector<float> uf_rms_vect = rms.get_taskUF();
 
-    QString uf_text = "Calculating utilization factor for each task:\n";
+    ui->listWidget->addItem("Calculating utilization factor for each task:\n");
     for(int i = 0; i < schedule->get_taskTable()->size(); i++) {
-        uf_text.append("task '" + task_names[i] + "' = " + QString::number(uf_rms_vect[i]) + "\n");
+        ui->listWidget->addItem("task '" + task_names[i] + "' = " + QString::number(uf_rms_vect[i]) + "\n");
     }
-    uf_text.append("Worst case U0: " + QString::number(wc_rms) + "\n");
+    ui->listWidget->addItem("Worst case U0: " + QString::number(wc_rms) + "\n");
     if (uf_plannable == -1) {
-        uf_text.append(schedule->get_projectName() + " might not be plannable!\n");
-        uf_text.append("warranty test result = " + QString::number(rms.get_uf()) + "\n");
-        uf_text.append("Using time demand analysis to verify plannability...\n");
+        ui->listWidget->addItem(schedule->get_projectName() + " might not be plannable!\n");
+        ui->listWidget->addItem("warranty test result = " + QString::number(rms.get_uf()) + "\n");
+        ui->listWidget->addItem("Using time demand analysis to verify plannability...\n");
         plannable = rms.rms_response_time(schedule->get_taskTable()->size(),
                                                 schedule->get_taskExecT(),
                                                 schedule->get_taskPeriods());
         QVector<int> td_rms_vect = rms.get_time_demand();
         QVector<bool> valid_td_vect = rms.get_is_valid();
-        uf_text.append("Calculating time demand value for each task:\n");
+        ui->listWidget->addItem("Calculating time demand value for each task:\n");
         for(int i = 0; i < valid_td_vect.size(); i++) {
             if(!valid_td_vect[i]) {
-                uf_text.append("task '" + task_names[i] + "' = " + QString::number(td_rms_vect[i]));
-                uf_text.append(" > " + QString::number(task_execT[i]) + " TD VALUE NOT VALID\n");
-                uf_text.append(schedule->get_projectName() + " NOT PLANNABLE!\n");
+                ui->listWidget->addItem("task '" + task_names[i] + "' = " + QString::number(td_rms_vect[i]));
+                ui->listWidget->addItem(" > " + QString::number(task_execT[i]) + " TD VALUE NOT VALID\n");
+                ui->listWidget->addItem(schedule->get_projectName() + " NOT PLANNABLE!\n");
                 break;
             }
-            uf_text.append("task '" + task_names[i] + "' = " + QString::number(td_rms_vect[i]) + "\n"); 
+            ui->listWidget->addItem("task '" + task_names[i] + "' = " + QString::number(td_rms_vect[i]) + "\n");
         }
-        uf_text.append(schedule->get_projectName() + " is plannable!\n");
+        ui->listWidget->addItem(schedule->get_projectName() + " is plannable!\n");
     } else if (uf_plannable) {
-        uf_text.append(schedule->get_projectName() + " is plannable!\n");
-        uf_text.append("warranty test result = " + QString::number(rms.get_uf()) + "\n");
+        ui->listWidget->addItem(schedule->get_projectName() + " is plannable!\n");
+        ui->listWidget->addItem("warranty test result = " + QString::number(rms.get_uf()) + "\n");
         plannable = true;
     } else {
-        uf_text.append(schedule->get_projectName() + " NOT PLANNABLE!\n");
-        uf_text.append("warranty test result = " + QString::number(rms.get_uf()) + "\n");
+        ui->listWidget->addItem(schedule->get_projectName() + " NOT PLANNABLE!\n");
+        ui->listWidget->addItem("warranty test result = " + QString::number(rms.get_uf()) + "\n");
         plannable = false;
     }
-
-    QString display_text = init_text + uf_text;
-    ui->console_label->setText(display_text);
     return plannable;
 }
 
@@ -127,7 +186,7 @@ void MainWindow::on_actionScheduler_Settings_triggered()
     }
 }
 
-
+// Run Scheduler, show results on graph and console.
 void MainWindow::on_actionRun_Scheduler_triggered()
 {
     if (projectCreated) {
@@ -140,7 +199,7 @@ void MainWindow::on_actionRun_Scheduler_triggered()
     }
 }
 
-
+// Restart Scheduler, show graph without running simulation.
 void MainWindow::on_actionRestart_Scheduler_triggered()
 {
     if (projectCreated) {
@@ -151,7 +210,7 @@ void MainWindow::on_actionRestart_Scheduler_triggered()
     }
 }
 
-
+// Create and configure a new project.
 void MainWindow::on_actionNew_Schedule_triggered()
 {
     if(projectCreated) {
@@ -166,7 +225,7 @@ void MainWindow::on_actionNew_Schedule_triggered()
             delete chartView;
             delete layout;
             delete schedule;
-            ui->console_label->clear();
+            ui->listWidget->clear();
             schedule = new Scheduler;
             projectCreated = false;
         }
@@ -179,7 +238,7 @@ void MainWindow::on_actionNew_Schedule_triggered()
     projectCreated = true;
 }
 
-
+// Delete current project and clear mainWindow.
 void MainWindow::on_actionDeleteCurrent_Scheduler_triggered()
 {
     if(projectCreated) {
@@ -194,7 +253,7 @@ void MainWindow::on_actionDeleteCurrent_Scheduler_triggered()
             delete chartView;
             delete layout;
             delete schedule;
-            ui->console_label->clear();
+            ui->listWidget->clear();
             schedule = new Scheduler;
             projectCreated = false;
         }
@@ -204,19 +263,20 @@ void MainWindow::on_actionDeleteCurrent_Scheduler_triggered()
     }
 }
 
-
+// Open existing database
 void MainWindow::on_openDatabaseButton_clicked()
 {
     openDatabase(OPEN);
 }
 
 
-
+// Create and open a new database.
 void MainWindow::on_newDatabaseButton_clicked()
 {
     openDatabase(NEW);
 }
 
+// Method used to open or create a database based on the parameter given (OPEN or NEW)
 void MainWindow::openDatabase(typeAction type_action) {
     QString nameFile;
     QDir directory = QDir::home();
@@ -264,7 +324,7 @@ void MainWindow::on_connectToDatabase_clicked()
 }
 
 
-//Insertar en base de datos
+// Insert project into database (new row).
 void MainWindow::on_actionSave_triggered()
 {
     if (!database->databaseIsOpen()) {
@@ -290,7 +350,7 @@ void MainWindow::on_actionSave_triggered()
     }
 }
 
-
+// Delete project from database.
 void MainWindow::on_deleteButton_clicked()
 {
     if (!database->databaseIsOpen()) {
@@ -322,7 +382,8 @@ void MainWindow::on_projectTable_clicked(const QModelIndex &index)
     insertImage(index);
 }
 
-
+// insertImage shows project graph as an image when clicking on any given row.
+// If the row clicked has no image (is not plannable) no image is shown.
 void MainWindow::insertImage(const QModelIndex &index)
 {
     const int id = mModel->index(lastIndex->row(), 0).data().toInt(); // Obtenemos índice
@@ -344,6 +405,7 @@ void MainWindow::insertImage(const QModelIndex &index)
     ui->imgGraph->setPixmap(pixmap);
 }
 
+//
 void MainWindow::on_filterButton_clicked()
 {
     if (!database->databaseIsOpen()) {
@@ -381,7 +443,7 @@ void MainWindow::on_filterButton_clicked()
     }
 }
 
-
+// Clears Filter options.
 void MainWindow::on_cleanButton_clicked()
 {
     if (mModel) {
@@ -395,7 +457,7 @@ void MainWindow::on_cleanButton_clicked()
     ui->calendarEdit->clear();
 }
 
-
+//
 void MainWindow::on_calendarButton_clicked()
 {
     if (!database->databaseIsOpen()) {
@@ -410,5 +472,38 @@ void MainWindow::on_calendarButton_clicked()
     }
     ui->calendarEdit->clear();
     ui->calendarEdit->setText(calendar->get_selectedDate());
+}
+
+// Opens program settings. Edit line colours and x-axis seperation.
+void MainWindow::on_actionWindow_settings_triggered()
+{
+    settings->setModal(true);
+    settings->setWindowTitle("Settings");
+    settings->exec();
+    if (projectCreated) {
+        createGraph(true, false);
+    }
+}
+
+
+void MainWindow::on_actionSave_Graph_as_png_triggered()
+{
+    QChart *chart = graph->get_chart();
+    QChartView *chartView = new QChartView(chart);
+    QPixmap p = chartView->grab();
+    QString fileName = QFileDialog::getSaveFileName(this,
+                       tr("Save Image"), "image.png",
+                       tr(".png;;All Files (*)"));
+    if (fileName.isEmpty())
+        return;
+    else {
+        QFile file(fileName);
+        if (!file.open(QIODevice::WriteOnly)) {
+            QMessageBox::information(this, tr("Unable to open file"),
+                file.errorString());
+            return;
+        }
+        p.save(fileName);
+    }
 }
 

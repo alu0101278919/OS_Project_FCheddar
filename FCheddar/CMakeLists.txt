@@ -37,6 +37,9 @@ set(PROJECT_SOURCES
         graph.cpp
         rtalgorithms.h
         rtalgorithms.cpp
+        settings.h
+        settings.cpp
+        settings.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

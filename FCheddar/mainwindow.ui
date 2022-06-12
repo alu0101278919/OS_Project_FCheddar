@@ -44,7 +44,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>881</width>
+             <width>901</width>
              <height>251</height>
             </rect>
            </property>
@@ -53,20 +53,10 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="console_label">
-          <property name="minimumSize">
-           <size>
-            <width>776</width>
-            <height>242</height>
-           </size>
-          </property>
+         <widget class="QListWidget" name="listWidget">
           <property name="styleSheet">
-           <string notr="true">background-color : #E3E3E3;
-color : black;
-font: 9pt &quot;Consolas&quot;;</string>
-          </property>
-          <property name="text">
-           <string/>
+           <string notr="true">font: 9pt &quot;Consolas&quot;;
+background-color: rgb(200, 200, 200);</string>
           </property>
          </widget>
         </item>
@@ -578,6 +568,7 @@ font: 9pt &quot;Consolas&quot;;</string>
      <string>Edit</string>
     </property>
     <addaction name="actionWindow_settings"/>
+    <addaction name="actionSave_Graph_as_png"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -693,6 +684,11 @@ font: 9pt &quot;Consolas&quot;;</string>
   <action name="actionWindow_settings">
    <property name="text">
     <string>Window settings</string>
+   </property>
+  </action>
+  <action name="actionSave_Graph_as_png">
+   <property name="text">
+    <string>Save Graph as .png</string>
    </property>
   </action>
  </widget>
