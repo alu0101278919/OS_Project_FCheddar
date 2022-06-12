@@ -488,22 +488,27 @@ void MainWindow::on_actionWindow_settings_triggered()
 
 void MainWindow::on_actionSave_Graph_as_png_triggered()
 {
-    QChart *chart = graph->get_chart();
-    QChartView *chartView = new QChartView(chart);
-    QPixmap p = chartView->grab();
-    QString fileName = QFileDialog::getSaveFileName(this,
-                       tr("Save Image"), "image.png",
-                       tr(".png;;All Files (*)"));
-    if (fileName.isEmpty())
-        return;
-    else {
-        QFile file(fileName);
-        if (!file.open(QIODevice::WriteOnly)) {
-            QMessageBox::information(this, tr("Unable to open file"),
-                file.errorString());
+    if (projectCreated) {
+        QChart *chart = graph->get_chart();
+        QChartView *chartView = new QChartView(chart);
+        QPixmap p = chartView->grab();
+        QString fileName = QFileDialog::getSaveFileName(this,
+                           tr("Save Image"), "image.png",
+                           tr(".png;;All Files (*)"));
+        if (fileName.isEmpty())
             return;
+        else {
+            QFile file(fileName);
+            if (!file.open(QIODevice::WriteOnly)) {
+                QMessageBox::information(this, tr("Unable to open file"),
+                    file.errorString());
+                return;
+            }
+            p.save(fileName);
         }
-        p.save(fileName);
+    } else {
+        QMessageBox::critical(this, "Error", "No project has been created.");
+        return;
     }
 }
 
