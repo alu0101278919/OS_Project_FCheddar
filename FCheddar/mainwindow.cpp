@@ -223,7 +223,10 @@ void MainWindow::on_actionRun_Scheduler_triggered()
     if (projectCreated) {
         mPlannable = is_plannable();
         if(mPlannable) {
-          createGraph(true, true);
+            createGraph(true, true);
+            QMessageBox::information(this, "Plannable info", "Current project is plannable");
+        } else {
+            QMessageBox::information(this, "Plannable info", "Current project is not plannable");
         }
     } else {
         QMessageBox::critical(this, "Error", "No project has been created.");
@@ -591,4 +594,158 @@ void MainWindow::on_actionSave_Graph_as_png_triggered()
         return;
     }
 }
+
+
+// TCP server help
+void MainWindow::on_actionServer_Database_help_triggered()
+{
+    QMessageBox::information(this,"About TCP Server",
+                             "<h1>TCP Server</h1>"
+                             "<p>To access the server options select: <b>Tools > "
+                             "Server Database</b>.</p>"
+                             "<p>It should be noted that it is necessary to have an"
+                             " open database to be able to access this option.</p>"
+                             "<p>Once inside, there is a default server address and"
+                             " a server port that needs to be changed.</p>"
+                             "<p>For example, you could put port 3000.</p>"
+                             "<p>When you give the <b>\"Start\"</b> the server will"
+                             " start working.</p>"
+                             "<p>If <b>\"Disconnect\"</b> is given, the server will"
+                             " be off, so it will stop listening to the selected port.</p>");
+}
+
+
+// TCP client help
+void MainWindow::on_actionClient_Database_help_triggered()
+{
+    QMessageBox::information(this,"About TCP Client",
+                             "<h1>TCP Client</h1>"
+                             "<p>To access the client options, select the button:"
+                             " <b>Connect to Database</b> in the database tab.</p>"
+                             "<h2>How to connect?</h2>"
+                             "<p>To connect, you first need to know the port that a"
+                             " server is already listening on.</p>"
+                             "<p>Having the port, it must be placed in the port spin"
+                             " box, since we are making a local connection,"
+                             " it is not necessary to change the server address.</p>"
+                             "<p>To finish we select the button to connect.</p>"
+                             "<h2>How to disconnect?</h2>"
+                             "<p>Simply select the disconnect button.</p>"
+                             "<h2>Types of requests to the server</h2>"
+                             "<p>There are 2 different types of request:</p>"
+                             "<ul><li type=\"disc\">Text: the information stored in "
+                             "the database of the requested project will be requested.</li>"
+                             "<li type=\"disc\">Image: the image stored in the database "
+                             "of the requested project will be requested.</li></ul>"
+                             "<p>To use the requests it is necessary to know that the server"
+                             " contains the requested project.</p>");
+}
+
+
+// General information on the use of the simulator help
+void MainWindow::on_actionGeneral_Usage_Information_Simulation_triggered()
+{
+    QMessageBox::information(this, "General Usage Information.",
+                             "<h1>General information on the use of the simulator</h1>"
+                             "<p>The simulation corresponds to the entire simulation tab.</p>"
+                             "<p>To access the simulation part it is necessary to have "
+                             "a project created</p>"
+                             "<h2>How to create a project?</h2>"
+                             "<p>To create a project it is necessary to select the new schedule "
+                             "button, inside there the planner options will appear where tasks "
+                             "can be added and they will be ordered by period according to the "
+                             "Rate Monotonic planning algorithm.<p>"
+                             "<h2>How to edit a project?</h2>"
+                             "<p>To edit the project select the <b>Scheduler Settings</b> option. "
+                             "The options will appear again with the tasks added with your "
+                             "information.</p>"
+                             "<h2>How to delete a project?</h2>"
+                             "<p>To delete the project you just have to select the <b>Close "
+                             "Schedule option</b>.</p>"
+                             "<h2>How to refresh the graph?</h2>"
+                             "<p>To refresh the graph we just select the Restart Scheduler option.</p>"
+                             "<h2>Why is the graph sometimes not painted?</h2>"
+                             "<p>Sometimes the graph does not paint because the tasks "
+                             "you are trying to schedule are not scheduleable.</p>"
+                             );
+
+}
+
+
+// Edit appearance of the graph help
+void MainWindow::on_actionEdit_appearance_Simulation_triggered()
+{
+    QMessageBox::information(this, "Edit appearance",
+                             "<h1>Edit the appearance of the graph</h1>"
+                             "<p>To edit the appearance of the graph select: <b>Edit > Window Settings</b>.</p>"
+                             "<p>3 options will appear in the window.</p> <p>The first is used to split the "
+                             "X-axis differently with the hyperperiod, which will allow you to "
+                             "adjust if you have too large a hyperperiod. By default this option "
+                             "is 5.</p><p>The second and third have to do with colors on the graph.<br>The "
+                             "second edits the color of the line that always appears and the third "
+                             "is the color of the line when a task is running.</p>"
+                             );
+}
+
+
+// Database help
+void MainWindow::on_actionGeneral_Usage_Information_Database_triggered()
+{
+    QMessageBox::information(this, "About Database",
+                             "<h1>About Database</h1>"
+                             "<p>The database corresponds to the entire database tab.</p>"
+                             "<h2>New Database</h2>"
+                             "<p>To create a new database select the new database button "
+                             "and select where you want to save the database and its name</p>"
+                             "<h2>Open Database</h2>"
+                             "<p>to open the database select the open database "
+                             "button and select the database that you have saved locally</p>"
+                             "<h2>Delete row</h2>"
+                             "<p>To delete rows select the row to delete "
+                             "in the table and press the delete button</p>");
+}
+
+
+// Filter help
+void MainWindow::on_actionFilter_triggered()
+{
+    QMessageBox::information(this, "About Filter",
+                             "<h1>About Filter</h1>"
+                             "<p>The filter is located in the database tab."
+                             "The filter is very easy and intuitive. "
+                             "Just write in the section what you want "
+                             "to filter from the database table and it "
+                             "will be filtered.</p>"
+                             "<p>It is necessary to have an open database.</p>"
+                             "<p>It is not necessary to fill in all the fields.</p>"
+                             "<p>For the date you just have to open the calendar "
+                             "and search for the specific day you want to filter. "
+                             "Although you can also write the date directly if you want.</p>");
+}
+
+
+// FCheddar help
+void MainWindow::on_actionInfo_FCheddar_help_triggered()
+{
+    QMessageBox::information(this, "About FCheddar",
+                             "<h1>About FCheddar</h1>"
+                             "<p>Made by Jaime Pablo Pérez Moro "
+                             "and Anabel Díaz Labrador.</p>"
+                             "<h2>Description</h2>"
+                             "<p>In this project we have programmed a real-time scheduler simulator inspired by Cheddar."
+                             "We have used QT creator to make this project."
+                             "This simulation will be done using Rate-monotonic scheduling.</p>"
+                             "<h2>QT Creator</h2>"
+                             "<p>We have worked on version 6.0.2 although it can possibly run on version 5.</p>"
+                             "<h2>Version FCheddar v0.1</h2>"
+                             "<p>Fcheddar is a simple schedule simulator "
+                             "that provides plannability information on a "
+                             "given project created by the user.</p>");
+}
+
+
+
+
+
+
 

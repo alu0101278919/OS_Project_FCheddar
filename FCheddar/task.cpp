@@ -22,10 +22,16 @@ void Task::on_buttonBox_accepted()
         QMessageBox::warning(this, "Warning", "Task name cannot be empty.");
         return;
     } else if (ui->execTime->value() > ui->period->value()) {
-        QMessageBox::warning(this, "Warning", "Time execution must be greater than period.");
+        QMessageBox::warning(this, "Warning", "Execution time must be greater than period.");
         return;
     } else if (ui->arrivalTime->value() != 0) {
-        QMessageBox::warning(this, "Warning", "Arrival Time must be cero.");
+        QMessageBox::warning(this, "Warning", "Arrival Time must be zero.");
+        return;
+    } else if (ui->period->value() == 0) {
+        QMessageBox::warning(this, "Warning", "Period must not be zero.");
+        return;
+    } else if (ui->execTime->value() == 0) {
+        QMessageBox::warning(this, "Warning", "Execution time must not be zero.");
         return;
     }
     accept();

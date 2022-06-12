@@ -13,6 +13,7 @@ Settings::Settings(QWidget *parent)
 {
     ui->setupUi(this);
     xAxis = 5;
+    ui->xAxisBox->setValue(xAxis);
 }
 
 

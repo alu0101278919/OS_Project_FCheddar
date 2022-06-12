@@ -45,6 +45,10 @@ private slots:
     void on_deleteButton_clicked();
 
 private:
+    static int gcd(int, int);
+    static int lcm(int, int);
+
+
     Ui::Scheduler *ui;
     QVector<taskInfo>* taskTable;
     QString projectName;

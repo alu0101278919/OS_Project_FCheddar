@@ -7,25 +7,6 @@
 #include <QMessageBox>
 #include <QCheckBox>
 
-// Calculate greatest common divisor.
-int gcd(int a, int b)
-{
-    while(true)
-    {
-        if (a == 0) return b;
-        b %= a;
-        if (b == 0) return a;
-        a %= b;
-    }
-}
-
-// Calculate lowest common multiple
-int lcm(int a, int b)
-{
-    int temp = gcd(a, b);
-
-    return temp ? (a / temp * b) : 0;
-}
 
 // Scheduler Constructor
 Scheduler::Scheduler(QWidget *parent) :
@@ -39,6 +20,7 @@ Scheduler::Scheduler(QWidget *parent) :
     ui->tableWidget->setColumnCount(5);
     ui->tableWidget->setHorizontalHeaderLabels(titles);
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch); // para que las columnas completen el widget
+    ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 
@@ -78,6 +60,7 @@ Scheduler::Scheduler(const Scheduler& otherSchedule, QWidget *parent) :
     std::sort(taskTable->begin(), taskTable->end()); // Order tasks by period (bigger period means lower priority)
 }
 
+
 // Scheduler Destructor
 Scheduler::~Scheduler()
 {
@@ -85,14 +68,17 @@ Scheduler::~Scheduler()
     delete taskTable;
 }
 
+
 // GETTERS
 QString Scheduler::get_projectName(void) const {
     return projectName;
 }
 
+
 QVector<taskInfo>* Scheduler::get_taskTable(void) const {
     return taskTable;
 }
+
 
 QVector<QString> Scheduler::get_taskNames(void) const {
     QVector<QString> vect;
@@ -102,6 +88,7 @@ QVector<QString> Scheduler::get_taskNames(void) const {
     return vect;
 }
 
+
 QVector<int> Scheduler::get_taskAT(void) const {
     QVector<int> vect;
     for(int i = 0; i < taskTable->size(); i++) {
@@ -109,6 +96,7 @@ QVector<int> Scheduler::get_taskAT(void) const {
     }
     return vect;
 }
+
 
 QVector<int> Scheduler::get_taskPeriods(void) const {
     QVector<int> vect;
@@ -118,6 +106,7 @@ QVector<int> Scheduler::get_taskPeriods(void) const {
     return vect;
 }
 
+
 QVector<int> Scheduler::get_taskExecT(void) const {
     QVector<int> vect;
     for(int i = 0; i < taskTable->size(); i++) {
@@ -125,6 +114,7 @@ QVector<int> Scheduler::get_taskExecT(void) const {
     }
     return vect;
 }
+
 
 QVector<bool> Scheduler::get_hidden_tasks(void) const {
     QVector<bool> vect;
@@ -134,10 +124,33 @@ QVector<bool> Scheduler::get_hidden_tasks(void) const {
     return vect;
 }
 
+
 // Adds up all lowest common multiples from all tasks which gives the hyperperiod.
 int Scheduler::calculate_hyperperiod(QVector<int> vect) {
     return std::accumulate(vect.begin(), vect.end(), 1, lcm);
 }
+
+
+// Calculate greatest common divisor.
+int Scheduler::gcd(int a, int b)
+{
+    while(true)
+    {
+        if (a == 0) return b;
+        b %= a;
+        if (b == 0) return a;
+        a %= b;
+    }
+}
+
+// Calculate lowest common multiple
+int Scheduler::lcm(int a, int b)
+{
+    int temp = gcd(a, b);
+
+    return temp ? (a / temp * b) : 0;
+}
+
 
 // Add a task to the project and includes it in a QTableWidget
 void Scheduler::on_addButton_clicked()
@@ -196,8 +209,9 @@ void Scheduler::on_deleteButton_clicked()
     if (reply == QMessageBox::Cancel) {
         return;
     }
+
+    taskTable->erase(taskTable->constBegin() + ui->tableWidget->currentRow());
     ui->tableWidget->removeRow(ui->tableWidget->currentRow());
-    taskTable->erase(taskTable->constBegin() + ui->tableWidget->currentRow() + 1);
 }
 
 

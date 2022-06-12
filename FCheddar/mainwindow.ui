@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="graph_tab">
        <attribute name="title">
@@ -601,9 +601,27 @@ background-color: rgb(200, 200, 200);</string>
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionServer_and_client_Database"/>
-    <addaction name="actionAbout_Graph"/>
-    <addaction name="actionInfo_FCheddar"/>
+    <widget class="QMenu" name="menuAbout_Database">
+     <property name="title">
+      <string>About Database</string>
+     </property>
+     <addaction name="actionGeneral_Usage_Information_Database"/>
+     <addaction name="actionFilter"/>
+    </widget>
+    <widget class="QMenu" name="menuAbout_Simulation">
+     <property name="title">
+      <string>About Simulation</string>
+     </property>
+     <addaction name="actionGeneral_Usage_Information_Simulation"/>
+     <addaction name="actionEdit_appearance_Simulation"/>
+    </widget>
+    <addaction name="menuAbout_Simulation"/>
+    <addaction name="menuAbout_Database"/>
+    <addaction name="separator"/>
+    <addaction name="actionServer_Database_help"/>
+    <addaction name="actionClient_Database_help"/>
+    <addaction name="separator"/>
+    <addaction name="actionInfo_FCheddar_help"/>
    </widget>
    <addaction name="menuEdit"/>
    <addaction name="menuTools"/>
@@ -687,17 +705,12 @@ background-color: rgb(200, 200, 200);</string>
     <string>Server Database</string>
    </property>
   </action>
-  <action name="actionServer_and_client_Database">
+  <action name="actionServer_Database_help">
    <property name="text">
-    <string>Server and client Database</string>
+    <string>Server Database</string>
    </property>
   </action>
-  <action name="actionAbout_Graph">
-   <property name="text">
-    <string>About Graph</string>
-   </property>
-  </action>
-  <action name="actionInfo_FCheddar">
+  <action name="actionInfo_FCheddar_help">
    <property name="text">
     <string>Info FCheddar</string>
    </property>
@@ -710,6 +723,31 @@ background-color: rgb(200, 200, 200);</string>
   <action name="actionSave_Graph_as_png">
    <property name="text">
     <string>Save Graph as .png</string>
+   </property>
+  </action>
+  <action name="actionClient_Database_help">
+   <property name="text">
+    <string>Client Database</string>
+   </property>
+  </action>
+  <action name="actionGeneral_Usage_Information_Simulation">
+   <property name="text">
+    <string>General Usage Information</string>
+   </property>
+  </action>
+  <action name="actionEdit_appearance_Simulation">
+   <property name="text">
+    <string>Edit appearance</string>
+   </property>
+  </action>
+  <action name="actionGeneral_Usage_Information_Database">
+   <property name="text">
+    <string>General Usage Information</string>
+   </property>
+  </action>
+  <action name="actionFilter">
+   <property name="text">
+    <string>Filter</string>
    </property>
   </action>
  </widget>
