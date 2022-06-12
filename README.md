@@ -15,7 +15,7 @@ Fcheddar is a simple schedule simulator that provides plannability information o
 # Usage
 When you first open **FCheddar** there are no open projects nor database created, the program consists of two tabs. One tab is dedicated to the scheduler simulator and the other contains the database interface.
 
-![main window screenshot bbdd y simulador](./md_images/1.png)
+![main window screenshot bbdd y simulador](./md_images/1.PNG)
 
 ## Simulation Usage
 First of all a project has to be created, this is done by clicking on the **new project** button shown in the following screenshot.
@@ -24,7 +24,7 @@ First of all a project has to be created, this is done by clicking on the **new 
 
 The following window will pop up
 
-![schedule new project](./md_images/3.png)
+![schedule new project](./md_images/3.PNG)
 
 Freely add or delete tasks to the project by clicking on the add button or delete button respectively under the task table.
 
@@ -36,13 +36,13 @@ Each task will need the following information:
  - Hide task checkbox (Tick this checkbox to hide task)
 > In future versions of FCheddar the idea is to be able to re-plan the project if a task is hidden.
 
-![task ui](./md_images/4.png)
+![task ui](./md_images/4.PNG)
  
 Once all of required information for a task has been introduced and is accepted the task is included into the table but no changes are made in the project yet, a name must be given to the project before being able to continue.
 
 After this a new project is created, hyperperiod is calculated for the current project and tasks are shown in the simulations tab graph.
 
-![project without running](./md_images/5.png)
+![project without running](./md_images/5.PNG)
 
 To run the simulation for the current project click on the **run button** from the toolbar at the top of the window.
 
@@ -50,7 +50,7 @@ To run the simulation for the current project click on the **run button** from t
 
 The simulation will run, painting with a different colour line on top of the base line for a task when that task is running. This will only happen if the current project is plannable, if its not, no graph will be shown and it will be notified to the user.
 
-![project not plannable](./md_images/6.png)
+![project not plannable](./md_images/6.PNG)
 
 Additionally, information about the simulation will be displayed on the console under the space for the graph. This information is displayed using the algorithms explained ahead.
 
@@ -72,14 +72,14 @@ the current project into the database.
 To change the graphs aspect go to *Edit-->Window Settings*. A new window will appear
 letting the user customize **base line colour for tasks**, **active line colour for tasks** and the **separation between ticks in the x-axis** for the graph. All of this information will be saved even if the program is closed.
 
-![window settings](./md_images/8.png)
+![window settings](./md_images/8.PNG)
 
-![window settings](./md_images/9.png)
+![window settings](./md_images/9.PNG)
 
 The current projects graph may be exported as **.PNG**.
 To do this go to *Edit-->Save graph as .png* and a window to select the folder where the image will be stored at will appear. 
 
-![save graph as png](./md_images/10.png)
+![save graph as png](./md_images/10.PNG)
 
 > In future versions of FCheddar we would like to improve this option. The current versions allows the user to convert any graph into .png even if the simulation has not been ran before doing so, this feature is kind of useless currently.
 
@@ -97,7 +97,7 @@ When trying to insert a row into the database table once created, if there is al
 
 Here is an overview of what the database looks like.
 
-![database](./md_images/14.png)
+![database](./md_images/14.PNG)
 
 > In future versions of FCheddar it would be great to be able to let the user grab a desired project from the database and have it open up and ready to use
 with the scheduler.
@@ -105,11 +105,11 @@ with the scheduler.
 ## TCP Server usage
 To access the server options select: *Tools-->Server Database*. It should be noted that it is necessary to have an open database to be able to access this option. Once inside, there is a default server address and a server port that needs to be changed. For example, you could set the port number to 3000. When you click on **Start** the server will start working. If **Disconnect** is clicked, the server will shut down, so it will stop listening to the selected port and the client connected to the server will be automatically desconnected too.
 
-![tcp server](./md_images/11.png)
+![tcp server](./md_images/11.PNG)
 
 A window like the following will open:
 
-![tcp server2](./md_images/12.png)
+![tcp server2](./md_images/12.PNG)
 
 ## TCP Client usage
 To access the client options, go to *Connect to Database* in the database tab. To connect, you first need to know the port that a server is already listening on. Having the port, it must be placed in the port spinbox, since we are making a local connection, it is not necessary to change the server address. To finish we select the button to connect. to disconnect simply click the disconnect button. 
@@ -118,7 +118,7 @@ To access the client options, go to *Connect to Database* in the database tab. T
 
 A window like the following will open:
 
-![tcp client2](./md_images/13.png)
+![tcp client2](./md_images/13.PNG)
 
 There are 2 different types of request:
  - **Text:** the information stored in the database of the requested project will be requested.
