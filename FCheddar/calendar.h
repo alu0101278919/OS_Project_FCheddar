@@ -5,11 +5,10 @@
 #include <QDate>
 
 namespace Ui {
-class Calendar;
+    class Calendar;
 }
 
-class Calendar : public QDialog
-{
+class Calendar : public QDialog {
     Q_OBJECT
 
 public:

@@ -4,11 +4,10 @@
 #include <QDialog>
 
 namespace Ui {
-class Settings;
+    class Settings;
 }
 
-class Settings : public QDialog
-{
+class Settings : public QDialog {
     Q_OBJECT
 
 public:
@@ -27,8 +26,6 @@ public:
 private slots:
     void on_colorButton_clicked();
     void on_activeColorButton_clicked();
-
-
     void on_acceptDenyBox_accepted();
 
 private:

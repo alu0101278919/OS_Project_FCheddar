@@ -12,8 +12,8 @@ Graph::Graph(int task_num, int hyperperiod,
              QColor activeColor,
              QColor baseColor,
              int xSeparation,
-             QString project_name)
-{
+             QString project_name) {
+
     // Initializing attributes
     hyperperiod_ = hyperperiod;
     task_num_ = task_num;
@@ -103,6 +103,7 @@ Graph::Graph(int task_num, int hyperperiod,
     activeTaskLines_.resize(task_num_);
 }
 
+
 Graph::~Graph()
 {
     if(axisX) delete axisX;
@@ -113,9 +114,11 @@ Graph::~Graph()
     if(chart) delete chart;
 }
 
+
 QChart* Graph::get_chart(void) const {
     return chart;
 }
+
 
 QByteArray Graph::get_chart_img(void) {
    QChartView *chartView = new QChartView(chart);
@@ -127,31 +130,38 @@ QByteArray Graph::get_chart_img(void) {
    return bArray;
 }
 
+
 int Graph::get_hyperperiod(void) const {
     return hyperperiod_;
 }
+
 
 void Graph::setTaskPen(QColor color, int width) {
     taskPen.setColor(color);
     taskPen.setWidth(width);
 }
 
+
 void Graph::setActiveTaskPen(QColor color, int width) {
     activeTaskPen.setColor(color);
     activeTaskPen.setWidth(width);
 }
 
+
 void Graph::set_taskPenColor(QColor color) {
     taskPenColor = color;
 }
+
 
 void Graph::set_activeTaskPenColor(QColor color) {
     activeTaskPenColor = color;
 }
 
+
 void Graph::set_xAxisSeparation(int separation) {
     xAxisSeparation = separation;
 }
+
 
 bool Graph::rms(void) {
     QVector<std::pair<int, int> > buffer;  // Execution queue
@@ -185,7 +195,6 @@ bool Graph::rms(void) {
             }
         }
     }
-    // Si al final del for el buffer no está vacio, NO ES PLANIFICABLE.
     return true;
 }
 

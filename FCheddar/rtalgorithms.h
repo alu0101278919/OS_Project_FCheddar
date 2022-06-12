@@ -4,8 +4,7 @@
 #include <math.h>
 
 
-class RTAlgorithms
-{
+class RTAlgorithms {
 public:
     RTAlgorithms();
     QVector<float> get_taskUF(void);

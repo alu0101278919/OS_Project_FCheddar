@@ -5,11 +5,10 @@
 #include <QDialog>
 
 namespace Ui {
-class Task;
+    class Task;
 }
 
-class Task : public QDialog
-{
+class Task : public QDialog {
     Q_OBJECT
 
 public:

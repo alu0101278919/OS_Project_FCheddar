@@ -23,8 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
     , calendar(new Calendar)
     , graph(new Graph)
     , projectCreated(false)
-    , settings(new Settings)
-{
+    , settings(new Settings) {
+
     ui->setupUi(this);
     readSettings();
 
@@ -48,14 +48,12 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 // MainWindow Destructor
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
     writeSettings();
     delete ui;
     delete schedule;
     delete settings;
-    if (projectCreated) 
-    {
+    if (projectCreated)  {
         delete graph;
         delete chartView;
         delete layout;
@@ -64,8 +62,7 @@ MainWindow::~MainWindow()
 
 
 // Saves Program Settings.
-void MainWindow::writeSettings()
-{
+void MainWindow::writeSettings() {
     QSettings program_settings("FCheddarSettings", "ULL_Jaime&Anabel");
 
     program_settings.beginGroup("MainWindow");
@@ -78,8 +75,7 @@ void MainWindow::writeSettings()
 
 
 // Loads Program Settings.
-void MainWindow::readSettings()
-{
+void MainWindow::readSettings() {
     QSettings program_settings("FCheddarSettings", "ULL_Jaime&Anabel");
 
     program_settings.beginGroup("MainWindow");
@@ -194,8 +190,7 @@ bool MainWindow::is_plannable() {
 
 
 // Open scheduler settings
-void MainWindow::on_actionScheduler_Settings_triggered()
-{
+void MainWindow::on_actionScheduler_Settings_triggered() {
     if (projectCreated) {
         Scheduler scheduleCopy(*schedule);
         schedule->setModal(true);
@@ -217,8 +212,7 @@ void MainWindow::on_actionScheduler_Settings_triggered()
 
 
 // Run Scheduler, show results on graph and console.
-void MainWindow::on_actionRun_Scheduler_triggered()
-{
+void MainWindow::on_actionRun_Scheduler_triggered() {
     ui->tabWidget->setCurrentIndex(0);
     if (projectCreated) {
         mPlannable = is_plannable();
@@ -236,8 +230,7 @@ void MainWindow::on_actionRun_Scheduler_triggered()
 
 
 // Restart Scheduler, show graph without running simulation.
-void MainWindow::on_actionRestart_Scheduler_triggered()
-{
+void MainWindow::on_actionRestart_Scheduler_triggered() {
     ui->tabWidget->setCurrentIndex(0);
     ui->listWidget->clear();
     if (projectCreated) {
@@ -250,8 +243,7 @@ void MainWindow::on_actionRestart_Scheduler_triggered()
 
 
 // Create and configure a new project.
-void MainWindow::on_actionNew_Schedule_triggered()
-{
+void MainWindow::on_actionNew_Schedule_triggered() {
     ui->tabWidget->setCurrentIndex(0);
     if(projectCreated) {
         QMessageBox::StandardButton reply;
@@ -287,8 +279,7 @@ void MainWindow::on_actionNew_Schedule_triggered()
 
 
 // Delete current project and clear mainWindow.
-void MainWindow::on_actionDeleteCurrent_Scheduler_triggered()
-{
+void MainWindow::on_actionDeleteCurrent_Scheduler_triggered() {
     ui->tabWidget->setCurrentIndex(0);
     if(projectCreated) {
         QMessageBox::StandardButton reply;
@@ -314,16 +305,14 @@ void MainWindow::on_actionDeleteCurrent_Scheduler_triggered()
 
 
 // Open existing database
-void MainWindow::on_openDatabaseButton_clicked()
-{
+void MainWindow::on_openDatabaseButton_clicked() {
     ui->tabWidget->setCurrentIndex(1);
     openDatabase(OPEN);
 }
 
 
 // Create and open a new database.
-void MainWindow::on_newDatabaseButton_clicked()
-{
+void MainWindow::on_newDatabaseButton_clicked() {
     ui->tabWidget->setCurrentIndex(1);
     openDatabase(NEW);
 }
@@ -372,16 +361,14 @@ void MainWindow::openDatabase(typeAction type_action) {
 
 
 // hacer de cliente
-void MainWindow::on_connectToDatabase_clicked()
-{
+void MainWindow::on_connectToDatabase_clicked() {
     Client client(this);
     client.setWindowTitle("Client tcp");
     client.exec();
 }
 
 
-void MainWindow::on_actionServer_Database_triggered()
-{
+void MainWindow::on_actionServer_Database_triggered() {
     if (!database->databaseIsOpen()) {
         QMessageBox::critical(this, "Error", database->getError());
         return;
@@ -394,8 +381,7 @@ void MainWindow::on_actionServer_Database_triggered()
 
 
 // Insert project into database (new row).
-void MainWindow::on_actionSave_triggered()
-{
+void MainWindow::on_actionSave_triggered() {
     ui->tabWidget->setCurrentIndex(1);
     if (!database->databaseIsOpen()) {
         QMessageBox::critical(this, "Error", database->getError());
@@ -421,13 +407,12 @@ void MainWindow::on_actionSave_triggered()
 
 
 // Delete project from database.
-void MainWindow::on_deleteButton_clicked()
-{
+void MainWindow::on_deleteButton_clicked() {
     if (!database->databaseIsOpen()) {
         QMessageBox::critical(this, "Error", database->getError());
         return;
     }
-    if (!mModel){
+    if (!mModel) {
         return;
     }
     QMessageBox::StandardButton reply;
@@ -444,9 +429,8 @@ void MainWindow::on_deleteButton_clicked()
 
 
 // Inserts image in label when clicking on a row in the database.
-void MainWindow::on_projectTable_clicked(const QModelIndex &index)
-{
-    if (!index.isValid()){
+void MainWindow::on_projectTable_clicked(const QModelIndex &index) {
+    if (!index.isValid()) {
             return;
     }
     lastIndex = &index;
@@ -456,8 +440,7 @@ void MainWindow::on_projectTable_clicked(const QModelIndex &index)
 
 // insertImage shows project graph as an image when clicking on any given row.
 // If the row clicked has no image (is not plannable) no image is shown.
-void MainWindow::insertImage(const QModelIndex &index)
-{
+void MainWindow::insertImage(const QModelIndex &index) {
     const int id = mModel->index(lastIndex->row(), 0).data().toInt(); // Obtenemos índice
     QSqlQuery query;
     query.exec(QString("SELECT scheduleable FROM FCheddar WHERE id=%1").arg(id));
@@ -469,7 +452,7 @@ void MainWindow::insertImage(const QModelIndex &index)
     query.exec(QString("SELECT graphImage FROM FCheddar WHERE id=%1").arg(id));
     query.next();
     QPixmap pixmap;
-    if (!pixmap.loadFromData(query.value(0).toByteArray())){
+    if (!pixmap.loadFromData(query.value(0).toByteArray())) {
         ui->imgGraph->setText("<b>Error de imagen</b>");
         return;
     }
@@ -479,8 +462,7 @@ void MainWindow::insertImage(const QModelIndex &index)
 
 
 // Generates a query with the given filter parameters.
-void MainWindow::on_filterButton_clicked()
-{
+void MainWindow::on_filterButton_clicked() {
     if (!database->databaseIsOpen()) {
         QMessageBox::critical(this, "Error", database->getError());
         return;
@@ -517,8 +499,7 @@ void MainWindow::on_filterButton_clicked()
 
 
 // Clears Filter options.
-void MainWindow::on_cleanButton_clicked()
-{
+void MainWindow::on_cleanButton_clicked() {
     if (mModel) {
         mModel->setFilter("");
     }
@@ -532,8 +513,7 @@ void MainWindow::on_cleanButton_clicked()
 
 
 // Opens calendar widget and inserts selected date on filter.
-void MainWindow::on_calendarButton_clicked()
-{
+void MainWindow::on_calendarButton_clicked() {
     if (!database->databaseIsOpen()) {
         QMessageBox::critical(this, "Error", database->getError());
         return;
@@ -549,8 +529,7 @@ void MainWindow::on_calendarButton_clicked()
 
 
 // Opens program settings. Edit line colours and x-axis seperation.
-void MainWindow::on_actionWindow_settings_triggered()
-{
+void MainWindow::on_actionWindow_settings_triggered() {
     Settings settingsCopy(*settings);
     settings->setModal(true);
     settings->setWindowTitle("Settings");
@@ -569,8 +548,7 @@ void MainWindow::on_actionWindow_settings_triggered()
 
 
 // Gets current project graph and converts it into PNG format to save it locally.
-void MainWindow::on_actionSave_Graph_as_png_triggered()
-{
+void MainWindow::on_actionSave_Graph_as_png_triggered() {
     if (projectCreated) {
         QChart *chart = graph->get_chart();
         QChartView *chartView = new QChartView(chart);
@@ -597,8 +575,7 @@ void MainWindow::on_actionSave_Graph_as_png_triggered()
 
 
 // TCP server help
-void MainWindow::on_actionServer_Database_help_triggered()
-{
+void MainWindow::on_actionServer_Database_help_triggered() {
     QMessageBox::information(this,"About TCP Server",
                              "<h1>TCP Server</h1>"
                              "<p>To access the server options select: <b>Tools > "
@@ -616,8 +593,7 @@ void MainWindow::on_actionServer_Database_help_triggered()
 
 
 // TCP client help
-void MainWindow::on_actionClient_Database_help_triggered()
-{
+void MainWindow::on_actionClient_Database_help_triggered() {
     QMessageBox::information(this,"About TCP Client",
                              "<h1>TCP Client</h1>"
                              "<p>To access the client options, select the button:"
@@ -643,8 +619,7 @@ void MainWindow::on_actionClient_Database_help_triggered()
 
 
 // General information on the use of the simulator help
-void MainWindow::on_actionGeneral_Usage_Information_Simulation_triggered()
-{
+void MainWindow::on_actionGeneral_Usage_Information_Simulation_triggered() {
     QMessageBox::information(this, "General Usage Information.",
                              "<h1>General information on the use of the simulator</h1>"
                              "<p>The simulation corresponds to the entire simulation tab.</p>"
@@ -673,8 +648,7 @@ void MainWindow::on_actionGeneral_Usage_Information_Simulation_triggered()
 
 
 // Edit appearance of the graph help
-void MainWindow::on_actionEdit_appearance_Simulation_triggered()
-{
+void MainWindow::on_actionEdit_appearance_Simulation_triggered() {
     QMessageBox::information(this, "Edit appearance",
                              "<h1>Edit the appearance of the graph</h1>"
                              "<p>To edit the appearance of the graph select: <b>Edit > Window Settings</b>.</p>"
@@ -689,8 +663,7 @@ void MainWindow::on_actionEdit_appearance_Simulation_triggered()
 
 
 // Database help
-void MainWindow::on_actionGeneral_Usage_Information_Database_triggered()
-{
+void MainWindow::on_actionGeneral_Usage_Information_Database_triggered() {
     QMessageBox::information(this, "About Database",
                              "<h1>About Database</h1>"
                              "<p>The database corresponds to the entire database tab.</p>"
@@ -707,8 +680,7 @@ void MainWindow::on_actionGeneral_Usage_Information_Database_triggered()
 
 
 // Filter help
-void MainWindow::on_actionFilter_triggered()
-{
+void MainWindow::on_actionFilter_triggered() {
     QMessageBox::information(this, "About Filter",
                              "<h1>About Filter</h1>"
                              "<p>The filter is located in the database tab."
@@ -725,8 +697,7 @@ void MainWindow::on_actionFilter_triggered()
 
 
 // FCheddar help
-void MainWindow::on_actionInfo_FCheddar_help_triggered()
-{
+void MainWindow::on_actionInfo_FCheddar_help_triggered() {
     QMessageBox::information(this, "About FCheddar",
                              "<h1>About FCheddar</h1>"
                              "<p>Made by Jaime Pablo Pérez Moro "

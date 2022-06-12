@@ -17,8 +17,7 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
@@ -46,17 +45,12 @@ private slots:
     void on_actionServer_Database_triggered();
     void on_actionWindow_settings_triggered();
     void on_actionSave_Graph_as_png_triggered();
-
     void on_actionServer_Database_help_triggered();
     void on_actionClient_Database_help_triggered();
-
     void on_actionGeneral_Usage_Information_Simulation_triggered();
     void on_actionEdit_appearance_Simulation_triggered();
-
     void on_actionInfo_FCheddar_help_triggered();
-
     void on_actionGeneral_Usage_Information_Database_triggered();
-
     void on_actionFilter_triggered();
 
 private:

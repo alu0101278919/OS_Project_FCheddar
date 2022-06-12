@@ -3,21 +3,22 @@
 
 #include <QMessageBox>
 
+
 Task::Task(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::Task)
-{
+    ui(new Ui::Task) {
+
     ui->setupUi(this);
 }
 
-Task::~Task()
-{
+
+Task::~Task() {
     delete ui;
 }
 
+
 // Accept the task
-void Task::on_buttonBox_accepted()
-{
+void Task::on_buttonBox_accepted() {
     if (ui->taskName->text().isEmpty()) {
         QMessageBox::warning(this, "Warning", "Task name cannot be empty.");
         return;
@@ -39,8 +40,7 @@ void Task::on_buttonBox_accepted()
 
 
 // Reject the task
-void Task::on_buttonBox_rejected()
-{
+void Task::on_buttonBox_rejected() {
     reject();
 }
 
@@ -49,13 +49,16 @@ QString Task::taskName() const {
     return ui->taskName->text();
 }
 
+
 int Task::execTime() const {
     return ui->execTime->value();
 }
 
+
 int Task::period() const {
     return ui->period->value();
 }
+
 
 int Task::arrivalTime() const {
     return ui->arrivalTime->value();

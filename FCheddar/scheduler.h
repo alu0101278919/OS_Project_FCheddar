@@ -5,7 +5,7 @@
 #include <QDialog>
 
 namespace Ui {
-class Scheduler;
+    class Scheduler;
 }
 
 struct taskInfo {
@@ -20,8 +20,7 @@ struct taskInfo {
     }
 };
 
-class Scheduler : public QDialog
-{
+class Scheduler : public QDialog {
     Q_OBJECT
 
 public:
@@ -48,14 +47,11 @@ private:
     static int gcd(int, int);
     static int lcm(int, int);
 
-
     Ui::Scheduler *ui;
     QVector<taskInfo>* taskTable;
     QString projectName;
 
-
-    enum Column
-    {
+    enum Column {
         TASK_NAME, ARRIVAL_T, EXEC_T, PERIOD, HIDE
     };
 };

@@ -5,19 +5,19 @@
 #include <QPushButton>
 #include <iostream>
 
+
 Calendar::Calendar(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Calendar),
-    selectedDate_(QDate::currentDate())
-{
+    selectedDate_(QDate::currentDate()) {
+
     ui->setupUi(this);
     ui->calendarWidget->setSelectedDate(QDate::currentDate());
     ui->selectedDateEdit->setDate(QDate::currentDate());
 }
 
 
-Calendar::~Calendar()
-{
+Calendar::~Calendar() {
     delete ui;
 }
 
@@ -27,20 +27,17 @@ QString Calendar::get_selectedDate(void) const {
 }
 
 
-void Calendar::on_acceptRejectButtons_accepted()
-{
+void Calendar::on_acceptRejectButtons_accepted() {
     accept();
 }
 
 
-void Calendar::on_acceptRejectButtons_rejected()
-{
+void Calendar::on_acceptRejectButtons_rejected() {
     reject();
 }
 
 
-void Calendar::on_calendarWidget_clicked(const QDate &date)
-{
+void Calendar::on_calendarWidget_clicked(const QDate &date) {
     selectedDate_ = ui->calendarWidget->selectedDate();
     ui->selectedDateEdit->setDate(selectedDate_);
 }

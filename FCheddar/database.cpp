@@ -1,8 +1,6 @@
 #include "database.h"
 #include "scheduler.h"
 
-#include <iostream>
-
 Database::Database(QObject *parent) {}
 
 
@@ -14,6 +12,7 @@ bool Database::startDatabase(const QString &nameFile) {
     return mDatabase.open();
 }
 
+
 bool Database::configureDatabase() {
     // La query que crea la base de datos si no está creada
     QSqlQuery query;
@@ -23,6 +22,7 @@ bool Database::configureDatabase() {
     return ok;
 }
 
+
 bool Database::databaseIsOpen() {
     if (!mDatabase.isOpen()) {
         mError = QString("Database is not open");
@@ -31,12 +31,11 @@ bool Database::databaseIsOpen() {
     return true;
 }
 
+
 QString Database::getError() {
     return mError;
 }
 
-#include <QFileDialog>
-#include <QMessageBox>
 
 // meter grafica entera
 bool Database::insertProject(const Scheduler& Project, const int hyperperiod, const bool plannable, const QByteArray& graphImage) {

@@ -7,11 +7,10 @@
 #include <QListWidget>
 
 namespace Ui {
-class Client;
+    class Client;
 }
 
-class Client : public QDialog
-{
+class Client : public QDialog {
     Q_OBJECT
 
 public:

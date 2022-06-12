@@ -3,8 +3,7 @@
 
 #include <QtCharts>
 
-class Graph
-{
+class Graph {
 public:
     Graph();
     Graph(int, int, QVector<QString>, QVector<int>, QVector<int>, QVector<int>, QVector<bool>, QColor, QColor, int, QString);
@@ -12,14 +11,13 @@ public:
 
     void setTaskPen(QColor, int);
     void setActiveTaskPen(QColor, int);
+    void set_taskPenColor(QColor);
+    void set_activeTaskPenColor(QColor);
+    void set_xAxisSeparation(int);
 
     QChart* get_chart(void) const;
     QByteArray get_chart_img(void);
     int get_hyperperiod(void) const;
-
-    void set_taskPenColor(QColor);
-    void set_activeTaskPenColor(QColor);
-    void set_xAxisSeparation(int);
 
     bool rms(void);
 

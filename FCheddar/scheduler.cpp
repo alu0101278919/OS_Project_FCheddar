@@ -12,8 +12,8 @@
 Scheduler::Scheduler(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Scheduler),
-    taskTable(new QVector<taskInfo>)
-{
+    taskTable(new QVector<taskInfo>) {
+
     QStringList titles;
     titles << "Task name" << "Arrival Time" << "Execution time" << "Period" << "Hide";
     ui->setupUi(this);
@@ -29,8 +29,8 @@ Scheduler::Scheduler(const Scheduler& otherSchedule, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Scheduler),
     taskTable(new QVector<taskInfo>),
-    projectName(otherSchedule.get_projectName())
-{
+    projectName(otherSchedule.get_projectName()) {
+
     *taskTable = *otherSchedule.get_taskTable();
     QStringList titles;
     titles << "Task name" << "Arrival Time" << "Execution time" << "Period" << "Hide";
@@ -62,8 +62,7 @@ Scheduler::Scheduler(const Scheduler& otherSchedule, QWidget *parent) :
 
 
 // Scheduler Destructor
-Scheduler::~Scheduler()
-{
+Scheduler::~Scheduler() {
     delete ui;
     delete taskTable;
 }
@@ -132,10 +131,8 @@ int Scheduler::calculate_hyperperiod(QVector<int> vect) {
 
 
 // Calculate greatest common divisor.
-int Scheduler::gcd(int a, int b)
-{
-    while(true)
-    {
+int Scheduler::gcd(int a, int b) {
+    while(true) {
         if (a == 0) return b;
         b %= a;
         if (b == 0) return a;
@@ -144,17 +141,14 @@ int Scheduler::gcd(int a, int b)
 }
 
 // Calculate lowest common multiple
-int Scheduler::lcm(int a, int b)
-{
+int Scheduler::lcm(int a, int b) {
     int temp = gcd(a, b);
-
     return temp ? (a / temp * b) : 0;
 }
 
 
 // Add a task to the project and includes it in a QTableWidget
-void Scheduler::on_addButton_clicked()
-{
+void Scheduler::on_addButton_clicked() {
     Task task(this);
     task.setWindowTitle("Task adder");
     int result = task.exec();
@@ -196,8 +190,7 @@ void Scheduler::on_addButton_clicked()
 }
 
 // Deletes a task from the project and reorders task by period.
-void Scheduler::on_deleteButton_clicked()
-{
+void Scheduler::on_deleteButton_clicked() {
     if (!ui->tableWidget->rowCount()) {
         QMessageBox::critical(this, "Error", "No tasks in the table.");
         return;
@@ -215,8 +208,7 @@ void Scheduler::on_deleteButton_clicked()
 }
 
 
-void Scheduler::on_AcceptRejectButtons_accepted()
-{
+void Scheduler::on_AcceptRejectButtons_accepted() {
     if (ui->projectName->text().isEmpty()) {
         QMessageBox::warning(this, "Warning", "Project name cannot be empty.");
         return;
@@ -234,8 +226,7 @@ void Scheduler::on_AcceptRejectButtons_accepted()
 }
 
 
-void Scheduler::on_AcceptRejectButtons_rejected()
-{
+void Scheduler::on_AcceptRejectButtons_rejected() {
     reject();
 }
 

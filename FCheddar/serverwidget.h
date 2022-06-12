@@ -8,11 +8,10 @@
 #include "database.h"
 
 namespace Ui {
-class ServerWidget;
+    class ServerWidget;
 }
 
-class ServerWidget : public QDialog
-{
+class ServerWidget : public QDialog {
     Q_OBJECT
 
 public:

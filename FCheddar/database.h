@@ -21,7 +21,6 @@
     ", graphImage BLOB)"
 
 
-
 class Database : public QObject {
   Q_OBJECT
 public:
