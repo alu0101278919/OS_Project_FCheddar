@@ -38,7 +38,8 @@ MainWindow::MainWindow(QWidget *parent)
     QPalette pal = QPalette();
     pal.setColor(QPalette::Window, color);
 
-
+    ui->tabWidget->setTabText(0, "Simulation");
+    ui->tabWidget->setTabText(1, "Database");
 
     ui->filterWidget->setAutoFillBackground(true);
     ui->filterWidget->setPalette(pal);
@@ -220,7 +221,8 @@ void MainWindow::on_actionRun_Scheduler_triggered()
 {
     ui->tabWidget->setCurrentIndex(0);
     if (projectCreated) {
-        if(is_plannable()) {
+        mPlannable = is_plannable();
+        if(mPlannable) {
           createGraph(true, true);
         }
     } else {
@@ -234,6 +236,7 @@ void MainWindow::on_actionRun_Scheduler_triggered()
 void MainWindow::on_actionRestart_Scheduler_triggered()
 {
     ui->tabWidget->setCurrentIndex(0);
+    ui->listWidget->clear();
     if (projectCreated) {
         createGraph(true, false);
     } else {
@@ -404,7 +407,7 @@ void MainWindow::on_actionSave_triggered()
                                  QMessageBox::Ok | QMessageBox::Cancel);
     if (reply == QMessageBox::Cancel) {
         return;
-    } else if (!database->insertProject(*schedule, graph->get_hyperperiod(), graph->get_chart_img())) {
+    } else if (!database->insertProject(*schedule, graph->get_hyperperiod(), mPlannable, graph->get_chart_img())) {
         QMessageBox::critical(this, "Error", database->getError());
         return;
     }

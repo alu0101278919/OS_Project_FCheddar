@@ -74,6 +74,8 @@ Scheduler::Scheduler(const Scheduler& otherSchedule, QWidget *parent) :
         ui->tableWidget->setItem(row, EXEC_T, new QTableWidgetItem(QString::number((*taskTable)[i].execT)));
         ui->tableWidget->setItem(row, PERIOD, new QTableWidgetItem(QString::number((*taskTable)[i].period)));
     }
+    ui->tableWidget->sortItems(PERIOD, Qt::AscendingOrder);
+    std::sort(taskTable->begin(), taskTable->end()); // Order tasks by period (bigger period means lower priority)
 }
 
 // Scheduler Destructor
@@ -170,7 +172,11 @@ void Scheduler::on_addButton_clicked()
     ui->tableWidget->setItem(row, TASK_NAME, new QTableWidgetItem(task.taskName()));
     ui->tableWidget->setItem(row, ARRIVAL_T, new QTableWidgetItem(QString::number(task.arrivalTime())));
     ui->tableWidget->setItem(row, EXEC_T, new QTableWidgetItem(QString::number(task.execTime())));
-    ui->tableWidget->setItem(row, PERIOD, new QTableWidgetItem(QString::number(task.period())));
+
+    // Inserting period value as int to order properly
+    QTableWidgetItem *period = new QTableWidgetItem;
+    period->setData(Qt::EditRole, task.period());
+    ui->tableWidget->setItem(row, PERIOD, period);
 
     ui->tableWidget->sortItems(PERIOD, Qt::AscendingOrder);
     std::sort(taskTable->begin(), taskTable->end()); // Order tasks by period (bigger period means lower priority)

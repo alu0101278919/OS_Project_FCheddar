@@ -39,15 +39,20 @@ QString Database::getError() {
 #include <QMessageBox>
 
 // meter grafica entera
-bool Database::insertProject(const Scheduler& Project, const int hyperperiod, const QByteArray& graphImage) {
+bool Database::insertProject(const Scheduler& Project, const int hyperperiod, const bool plannable, const QByteArray& graphImage) {
     QSqlQuery query;
-    QString hola = "Yes";
-    query.prepare("INSERT INTO FCheddar (projectName, taskNumber, hyperperiod, scheduleable, graphImage) "
+    QString isPlannable;
+    if(plannable) {
+        isPlannable = "Yes";
+    } else {
+        isPlannable = "No";
+    }
+    query.prepare("INSERT OR REPLACE INTO FCheddar (projectName, taskNumber, hyperperiod, scheduleable, graphImage) "
                   "VALUES (:name, :task, :hyperperiod, :scheduleable, :graph)");
     query.bindValue(":name", Project.get_projectName());
     query.bindValue(":task", Project.get_taskTable()->size());
     query.bindValue(":hyperperiod", hyperperiod);
-    query.bindValue(":scheduleable", hola);
+    query.bindValue(":scheduleable", isPlannable);
     query.bindValue(":graph", graphImage);
     bool ok = query.exec();
     if (!ok)

@@ -67,5 +67,6 @@ private:
     QChartView *chartView;
     QVBoxLayout *layout;
     bool projectCreated;
+    bool mPlannable;
 };
 #endif // MAINWINDOW_H
