@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>946</width>
-    <height>645</height>
+    <height>672</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="graph_tab">
        <attribute name="title">
@@ -44,7 +44,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>881</width>
+             <width>901</width>
              <height>251</height>
             </rect>
            </property>
@@ -53,21 +53,10 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="console_label">
-          <property name="minimumSize">
-           <size>
-            <width>776</width>
-            <height>242</height>
-           </size>
-          </property>
+         <widget class="QListWidget" name="listWidget">
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(255, 255, 255);
-border-color: rgb(122, 122, 122);
-font: 9pt &quot;Consolas&quot;;
-color: rgb(0, 0, 0);</string>
-          </property>
-          <property name="text">
-           <string>TextLabel</string>
+           <string notr="true">font: 9pt &quot;Consolas&quot;;
+background-color: rgb(200, 200, 200);</string>
           </property>
          </widget>
         </item>
@@ -592,7 +581,7 @@ color: rgb(0, 0, 0);</string>
      <x>0</x>
      <y>0</y>
      <width>946</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuEdit">
@@ -600,6 +589,7 @@ color: rgb(0, 0, 0);</string>
      <string>Edit</string>
     </property>
     <addaction name="actionWindow_settings"/>
+    <addaction name="actionSave_Graph_as_png"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -715,6 +705,11 @@ color: rgb(0, 0, 0);</string>
   <action name="actionWindow_settings">
    <property name="text">
     <string>Window settings</string>
+   </property>
+  </action>
+  <action name="actionSave_Graph_as_png">
+   <property name="text">
+    <string>Save Graph as .png</string>
    </property>
   </action>
  </widget>

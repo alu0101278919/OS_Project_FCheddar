@@ -13,6 +13,7 @@ struct taskInfo {
     int arrivalT;
     int period;
     int execT;
+    bool hide;
 
     bool operator<(const taskInfo &a) {
         return period < a.period;
@@ -25,6 +26,7 @@ class Scheduler : public QDialog
 
 public:
     explicit Scheduler(QWidget *parent = nullptr);
+    explicit Scheduler(const Scheduler&, QWidget *parent = nullptr);
     ~Scheduler();
 
     QVector<taskInfo>* get_taskTable(void) const;
@@ -33,6 +35,7 @@ public:
     QVector<int> get_taskAT(void) const;
     QVector<int> get_taskPeriods(void) const;
     QVector<int> get_taskExecT(void) const;
+    QVector<bool> get_hidden_tasks(void) const;
     int calculate_hyperperiod(QVector<int>);
 
 private slots:
@@ -49,7 +52,7 @@ private:
 
     enum Column
     {
-        TASK_NAME, ARRIVAL_T, EXEC_T, PERIOD
+        TASK_NAME, ARRIVAL_T, EXEC_T, PERIOD, HIDE
     };
 };
 
